@@ -23,6 +23,12 @@ class Products extends Model
         return $this->belongsTo(SubCategories::class);
     }
 
+    public function restaurant()
+    {
+        // body...
+        return $this->belongsTo(Restaurants::class);
+    }
+
     protected $fillable = [
         'name',
         'image',

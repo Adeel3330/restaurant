@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class Banners extends Model
 {
     use HasFactory;
 
@@ -14,8 +14,10 @@ class Categories extends Model
         // body...
         return $this->belongsTo(Restaurants::class);
     }
+
     protected $fillable = [
-        'name',
         'image',
+        'restaurant_id',
+
     ];
 }

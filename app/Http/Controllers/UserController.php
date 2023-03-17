@@ -90,7 +90,6 @@ class UserController extends Controller
 
     function getusers($id = null)
     {
-        return $id;
         if (!isset($id) && empty($id)) {
             $users = new users;
             $get = users::where('status', 'Active');
@@ -284,4 +283,46 @@ class UserController extends Controller
     public function cookies_get(){
         return response()->json($_COOKIE,200);
     }
+
+    public function get_otp_email(){
+        $arr['email'] = Session::get('otp_email');
+        $arr['token'] = Session::get('session.token');
+        return response()->json($arr,200);
+    }
+
+
+    public function edit_user(Request $req){
+        $validator = Validator::make($req->all(), [
+            'image' => ['required', Rule::imageFile()],
+            'name' =>'required',
+        
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        } else {
+            if ($_FILES['image']['size'] > 2000000) {
+                return response()->json([
+                    "message" => "Max file size is 2mb"
+                ], 302);
+            }
+            $sid = Session::get('id');
+            // unlink($_SERVER['DOCUMENT_ROOT'] . '/image/user/' .  Users::where('id', $sid)->first()->image);
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/user/' . $_FILES['image']['name'])) {
+            $res = Users::where('id', $sid)->update([
+                'image'=>$_FILES['image']['name'],
+                'name'=>$req->name
+            ]);
+            if ($res) {
+                return response()->json([
+                    'mesage' => "User Updated successfully"
+                ], 200);
+            } else {
+                return response()->json([
+                    'mesage' => "Something went wrong"
+                ], 302);
+            }
+        }
+    }
+}
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Homecontroller;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RestaurantController;
@@ -35,13 +36,25 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/otp_verified', 'otp_verified');
     Route::post('/change_password', 'change_password');
     Route::get('/cookie', 'cookies_get');
+    Route::get('/get_otp_email', 'get_otp_email');
     Route::post('/v3/admin_login', 'AdminLogin');
 });
 
 
+Route::middleware('LoginApi')->controller(UserController::class)->group(function () {
+    Route::post('/edit_user', 'edit_user');
+});
+
+
+Route::middleware('AdminLoginApi')->controller(UserController::class)->group(function () {
+    Route::get('/v3/users', 'getusers');
+    Route::get('/v3/users/{id}', 'getusers');
+});
+
 Route::middleware('LoginApi')->controller(Homecontroller::class)->group(function () {
     Route::post('/location_insert', 'location_insert');
     Route::post('/get_session', 'get_session');
+   
 });
 
 Route::middleware('LoginApi')->controller(CategoryController::class)->group(function () {
@@ -55,9 +68,22 @@ Route::middleware('AdminLoginApi')->controller(CategoryController::class)->group
     Route::post('/v3/edit_category/{id}', 'edit_category');
     Route::get('/v3/categories', 'categories');
     Route::get('/v3/categories/{id}', 'categories');
-    Route::get('/v3/users', 'getusers');
-    Route::get('/v3/users/{id}', 'getusers');
+ 
 });
+
+Route::middleware('LoginApi')->controller(BannerController::class)->group(function () {
+    Route::get('/banners', 'banners');
+    Route::get('/banners/{id}', 'banners');
+});
+Route::middleware('AdminLoginApi')->controller(BannerController::class)->group(function () {
+    Route::post('/v3/banner_create', 'banner_create');
+    Route::get('/v3/delete_banner', 'delete_banner');
+    Route::get('/v3/delete_banner/{id}', 'delete_banner');
+    Route::post('/v3/edit_banner/{id}', 'edit_banner');
+    Route::get('/v3/banners', 'banners');
+    Route::get('/v3/banners/{id}', 'banners');
+});
+
 
 
 Route::middleware('LoginApi')->controller(SubcategoryController::class)->group(function () {
@@ -73,11 +99,17 @@ Route::middleware('AdminLoginApi')->controller(SubcategoryController::class)->gr
     Route::get('/v3/sub_categories/{id}', 'sub_categories');
 });
 
+Route::middleware('AdminLoginApi')->controller(AdminController::class)->group(function () {
+    Route::get('/v3/delete_user/{id}', 'delete_user');
+});
+
 
 
 Route::middleware('LoginApi')->controller(ProductController::class)->group(function () {
     Route::get('/products', 'products');
     Route::get('/products/{id}', 'products');
+    Route::post('/search_products', 'search_products');
+    
 });
 
 

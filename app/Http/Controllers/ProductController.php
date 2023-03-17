@@ -14,6 +14,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'sub_category_id' => 'required',
+            'restaurant_id'=>'required',
             'name' => ['required', Rule::unique('products')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
             'price' => 'required',
@@ -28,13 +29,15 @@ class ProductController extends Controller
                     "message" => "Max file size is 2mb"
                 ], 302);
             } else {
-                if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/sub_category/' . $_FILES['image']['name'])) {
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/sub_category/' . $_FILES['image']['name'])) {
                     $category = new Products();
                     $category->name = $request->name;
                     $category->category_id = $request->category_id;
+                    $category->restaurant_id = $request->restaurant_id;
                     $category->sub_category_id = $request->sub_category_id;
                     $category->image = $_FILES['image']['name'];
                     $category->description = $request->description;
+                    $category->price = $request->price;
                     $category->status = "Active";
                     if ($category->save()) {
                         return response()->json([
@@ -88,7 +91,7 @@ class ProductController extends Controller
             if ($category->count() > 0) {
 
                 return response()->json(
-                    $category->with('category')->with('sub_category')->get(),
+                    $category->with('category')->with('sub_category','restaurant')->get(),
                     200
                 );
             } else {
@@ -97,7 +100,7 @@ class ProductController extends Controller
                 ], 302);
             }
         } else {
-            $category = Products::with('category','sub_category')->where('status', 'Active')->where('id', $id);
+            $category = Products::with('category','sub_category','restaurant')->where('status', 'Active')->where('id', $id);
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -122,6 +125,7 @@ class ProductController extends Controller
                     'category_id' => ['required'],
                     'sub_category_id'=>'required',
                     'name' => ['required'],
+                    'restaurant_id'=>'required',
                     'image' => ['required', Rule::imageFile()],
                     'description'=>'required',
                     'price'=>'required'
@@ -133,7 +137,8 @@ class ProductController extends Controller
                     'category_id' => 'required',
                     'sub_category_id' => 'required',
                     'description' => 'required',
-                    'price' => 'required'
+                    'price' => 'required',
+                    'restaurant_id'=>'required'
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -151,12 +156,14 @@ class ProductController extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink('../public/image/category/' .  Products::where('id', $id)->first()->image);
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/sub_category/' . $_FILES['image']['name'])) {
+                    unlink($_SERVER['DOCUMENT_ROOT'].'/image/product/' .  Products::where('id', $id)->first()->image);
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/product/' . $_FILES['image']['name'])) {
                         $category = Products::where('id', $id)->update([
                             'name' => $request->name,
                             'category_id' => $request->category_id,
                             'sub_category_id' => $request->sub_category_id,
+                            'restaurant_id'=>$request->restaurant_id,
+                            'price'=>$request->price,
                             'image' => $_FILES['image']['name'],
                             'description'=>$request->description,
                             'price'=>$request->price,
@@ -182,6 +189,7 @@ class ProductController extends Controller
                         'sub_category_id' => $request->sub_category_id,
                         'description' => $request->description,
                         'price' => $request->price,
+                        'restaurant_id'=>$request->restaurant_id,
                     ]);
                     if ($category) {
                         return response()->json([
@@ -197,6 +205,28 @@ class ProductController extends Controller
         } else {
             return response()->json([
                 "message" => "Product not exists"
+            ], 302);
+        }
+    }
+
+    public function search_products(Request $request)
+    {
+        # code...
+        $validator = Validator::make($request->all(), [
+                'search' => ['required'],
+                'id' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        } 
+        $products = Products::where('restaurant_id',$request->id)->where('name','LIKE','%'.$request->search."%");
+        if($products->count() > 0){
+            return response()->json($products->with('restaurant','category','sub_category')->get(), 200);
+        }
+        else
+        {
+            return response()->json([
+                "message" => "No record Found"
             ], 302);
         }
     }

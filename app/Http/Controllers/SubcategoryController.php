@@ -17,6 +17,7 @@ class SubcategoryController extends Controller
             'category_id' =>'required',
             'name' => ['required', Rule::unique('sub_categories')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
+            'restaurant_id'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -27,10 +28,11 @@ class SubcategoryController extends Controller
                     "message" => "Max file size is 2mb"
                 ], 302);
             } else {
-                if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/sub_category/' . $_FILES['image']['name'])) {
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/sub_category/' . $_FILES['image']['name'])) {
                     $category = new SubCategories();
                     $category->name = $request->name;
-                    $category->category_id = $request->category_id;
+                    $category->name = $request->name;
+                    $category->restaurant_id = $request->restaurant_id;
                     $category->image = $_FILES['image']['name'];
                     $category->status = "Active";
                     if ($category->save()) {
@@ -83,7 +85,7 @@ class SubcategoryController extends Controller
     public function sub_categories($id = null)
     {
         if (!$id) {
-            $category = SubCategories::with('category')->where('status', 'Active');
+            $category = SubCategories::with('category','restaurant')->where('status', 'Active');
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -96,7 +98,7 @@ class SubcategoryController extends Controller
                 ], 302);
             }
         } else {
-            $category = SubCategories::with('category')->where('status', 'Active')->where('id', $id);
+            $category = SubCategories::with('category','restaurant')->where('status', 'Active')->where('id', $id);
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -121,11 +123,13 @@ class SubcategoryController extends Controller
                     'category_id' => ['required'],
                     'name' => ['required'],
                     'image' => ['required', Rule::imageFile()],
+                    'restaurant_id'=>'required'
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
                     'name' => ['required'],
-                    'category_id'=>'required'
+                    'category_id'=>'required',
+                    'restaurant_id'=>'required'
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -143,10 +147,11 @@ class SubcategoryController extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink('../public/image/category/' .  SubCategories::where('id', $id)->first()->image);
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/sub_category/' . $_FILES['image']['name'])) {
+                    unlink($_SERVER['DOCUMENT_ROOT'].'/image/category/' .  SubCategories::where('id', $id)->first()->image);
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/sub_category/' . $_FILES['image']['name'])) {
                         $category = SubCategories::where('id', $id)->update([
                             'name' => $request->name,
+                            'restaurant_id'=>$request->restaurant_id,
                             'category_id'=>$request->category_id,
                             'image' => $_FILES['image']['name']
                         ]);
@@ -167,6 +172,7 @@ class SubcategoryController extends Controller
                 } else {
                     $category = SubCategories::where('id', $id)->update([
                         'name' => $request->name,
+                        'restaurant_id'=>$request->restaurant_id,
                         'category_id'=>$request->category_id
                     ]);
                     if ($category) {
