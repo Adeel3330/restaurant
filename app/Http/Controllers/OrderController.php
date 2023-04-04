@@ -128,8 +128,7 @@ class OrderController extends Controller
 
     public function orders($id = null){
         if(!$id){
-            $sid = Session::get('id');
-            $order = Orders::where('status', '!=', 'delete')->where('user_id', $sid);;
+            $order = Orders::where('status', '!=', 'delete');
             if($order->count() > 0){
                 return response()->json($order->with('user','product')->get(), 200);
             }
@@ -158,8 +157,7 @@ class OrderController extends Controller
     public function carts($id = null)
     {
         if (!$id) {
-            $sid = Session::get('id');
-            $order = AddtoCarts::where('status', '!=', 'delete')->where('user_id',$sid);
+            $order = AddtoCarts::where('status', '!=', 'delete');
             if ($order->count() > 0) {
                 return response()->json($order->with('user', 'product')->get(), 200);
             } else {
@@ -186,7 +184,7 @@ class OrderController extends Controller
         if (!$id) {
             $order = AddtoCarts::where('status', '!=', 'delete')->where('user_id',$sid);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->get(), 302);
+                return response()->json($order->with('user', 'product')->get(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
@@ -195,7 +193,7 @@ class OrderController extends Controller
         } else {
             $order = AddtoCarts::where('status', '!=', 'delete')->where('id', $id)->where('user_id', $sid);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->first(), 302);
+                return response()->json($order->with('user', 'product')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
