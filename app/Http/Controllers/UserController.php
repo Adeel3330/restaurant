@@ -74,6 +74,7 @@ class UserController extends Controller
             $user->password = Hash::make($req->password);
             $user->phone_no = $req->phone_no;
             $user->status = 'Active';
+            $user->image= 'Null';
             $res = $user->save();
             if ($res) {
                 return response()->json([
