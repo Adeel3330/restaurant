@@ -118,7 +118,7 @@ class OrderController extends Controller
         $orderscreate->order_no = $order_no;
         $orderscreate->save();
         foreach($request->items as $key=>$item){
-            $order = $orderscreate->first();
+            $order = Orders::where('user_id',$sid)->where('status','pending')->first();
             $order_id = $order['id'];
             $order_items = new OrderItems;
             $order_items->order_id = $order_id;
@@ -284,5 +284,26 @@ class OrderController extends Controller
         }
     }
 
+
+    public function order_update_status($id){
+        if(!$id){
+            return response()->json([
+                "message"=>"Please Enter Id of Order for update",
+            ],302);
+        }
+        $order = Orders::where('id',$id)->update([
+            'status'=> 'completed',
+        ]);
+        if($order){
+            return response()->json([
+                "message" => "Order Completed successfully",
+            ], 200);
+        }
+        else{
+            return response()->json([
+                "message" => "Something Went wrong",
+            ], 200);
+        }
+    }
 
 }

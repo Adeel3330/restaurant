@@ -139,6 +139,7 @@ Route::middleware('AdminLoginApi')->controller(OrderController::class)->group(fu
     Route::get('/v3/carts/{id}', 'carts');
     Route::get('/v3/orders', 'orders');
     Route::get('/v3/orders/{id}', 'orders');
+    Route::get('/v3/order_update/{id}', 'order_update_status');
 });
 
 
