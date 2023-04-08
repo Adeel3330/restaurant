@@ -15,16 +15,8 @@ class Orders extends Model
         return $this->belongsTo(Users::class);
     }
 
-    public function product()
-    {
-        return $this->belongsTo(Products::class);
-    }
-
     protected $fillable = [
         'user_id',
-        'product_id',
-        'quantity',
-        'payment',
         'transaction_id',
         'status'
     ];

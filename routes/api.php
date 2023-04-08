@@ -126,8 +126,8 @@ Route::middleware('LoginApi')->controller(OrderController::class)->group(functio
     Route::post('/add_to_cart', 'add_to_cart');
     Route::post('/order_create', 'order');
     Route::get('/delete_cart/{id}', 'delete_add_to_cart');
-    Route::get('/orders', 'orders');
-    Route::get('/orders/{id}', 'orders');
+    Route::get('/order', 'order_get');
+    Route::get('/order/{id}', 'order_get');
 
     Route::get('/cart', 'cart');
     Route::get('/cart/{id}', 'cart');

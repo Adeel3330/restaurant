@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Orders;
 use App\Models\AddtoCarts;
+use App\Models\OrderItems;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -61,43 +62,88 @@ class OrderController extends Controller
     
     public function order(Request $request){
         $validator = Validator::make($request->all(), [
-            // 'user_id' => 'required',
-            'product_id' => 'required',
-            'quantity' => 'required',
-            'transaction_id' =>'required',
-            'payment'=>'required'
+            'transaction_id' => 'required',
+            'items.*.product_id' => 'required',
+            'items.*.payment' => 'required',
+            'items.*.quantity' => 'required|numeric',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         }
+        // dd($request);
         $sid = $request->session()->get('id');
-        $carts = Orders::where('status', 'pending')->where('user_id', $sid)->where('product_id', $request->product_id);
+        $carts = Orders::where('status', 'pending')->where('user_id', $sid)->where('transaction_id',$request->transaction_id);
         if ($carts->count() > 0) {
+           $order = $carts->first();
+           $order_id = $order['id'];
+            foreach ($request->items as $item) {
+                $count = OrderItems::where('order_id', $order_id)->where('product_id',$item['product_id'])->count() ;
+                if($count > 0){
+                    $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
+                        'payment' => $item['payment'],
+                        'quantity' => $item['quantity'],
+                    ]);   
+                }
+                else
+                {
+                    $order_items = OrderItems::create([
+                        'product_id' => $item['product_id'],
+                        'payment' => $item['payment'],
+                        'quantity' => $item['quantity'],
+                        'order_id' => $order_id,
+                    ]);
+                }
+            }
+            if($order_items){
                 return response()->json([
-                    "message" => "Order already exists"
-                ], 302);
-        } else {
-            $order_no = Str::random(8);
-            $orders = new Orders();
-            $orders->user_id = $sid;
-            $orders->product_id = $request->product_id;
-            $orders->quantity = $request->quantity;
-            $orders->status = "pending";
-            $orders->order_no = $order_no;
-            $orders->payment = $request->payment;
-            $orders->transaction_id = $request->transaction_id;
-            if ($orders->save()) {
-                return response()->json([
-                    "message" => "Product order successfully",
-                    "order_no" => $order_no
+                    "message" => "Order Updated successfully",
                 ], 200);
-            } else {
+            }
+            else
+            {
                 return response()->json([
                     "message" => "Something went wrong"
-                ], 302);
+                ], 302); 
             }
+            
+
         }
+      
+        $order_no = Str::random(8);
+        $orderscreate = new Orders;
+        $orderscreate->user_id = $sid;
+        $orderscreate->status = "pending";
+        $orderscreate->transaction_id = $request->transaction_id;
+        $orderscreate->order_no = $order_no;
+        $orderscreate->save();
+        foreach($request->items as $key=>$item){
+            $order = $orderscreate->first();
+            $order_id = $order['id'];
+            $order_items = new OrderItems;
+            $order_items->order_id = $order_id;
+            $order_items->product_id = $item['product_id'];
+            $order_items->payment = $item['payment'];
+            $order_items->quantity = $item['quantity'];
+            $res = $order_items->save();
+        }
+        if($res){
+            $carts = AddtoCarts::where('user_id',$sid)->update([
+                'status'=>'delete',
+            ],200);
+            return response()->json([
+                "message" => "Product order successfully",
+                "order_no" => $order_no
+            ], 200);
+        }
+        else
+        {
+            return response()->json([
+                "message" => "Something went wrong"
+            ], 302);  
+        }
+        // exit;
+       
     }
 
 
@@ -130,7 +176,9 @@ class OrderController extends Controller
         if(!$id){
             $order = Orders::where('status', '!=', 'delete');
             if($order->count() > 0){
-                return response()->json($order->with('user','product')->get(), 200);
+                // $order->with('order_items')->get();
+                // dd($order);
+                return response()->json($order->with('user')->get(), 200);
             }
             else
             {
@@ -151,8 +199,6 @@ class OrderController extends Controller
             }
         }
     }
-
-
 
     public function carts($id = null)
     {
@@ -176,8 +222,6 @@ class OrderController extends Controller
             }
         }
     }
-
-
     public function cart($id = null)
     {
         
@@ -198,6 +242,43 @@ class OrderController extends Controller
             } else {
                 return response()->json([
                     "message" => "No cart found"
+                ], 302);
+            }
+        }
+    }
+
+
+    public function order_get($id = null)
+    {
+
+        $sid = Session::get('id');
+        if (!$id) {
+            $order = Orders::where('status', '!=', 'delete')->where('user_id', $sid);
+            if ($order->count() > 0) {
+                $order_items = OrderItems::with('product')->get();
+                $orders = $order->with('user')->get();
+                foreach($orders as $order){
+                    $order['orders_items'] = $order_items;
+                }
+                return response()->json($orders, 200);
+            } else {
+                return response()->json([
+                    "message" => "No Order found"
+                ], 302);
+            }
+        } else {
+            $order = Orders::where('status', '!=', 'delete')->where('id', $id)->where('user_id', $sid);
+            if ($order->count() > 0) {
+                $order_items = OrderItems::with('product')->get();
+                $orders = $order->with('user')->get();
+                foreach ($orders as $order) {
+                    $order['orders_items'] = $order_items;
+                }
+                return response()->json($orders, 200);
+                return response()->json($order->with('user', 'product')->first(), 200);
+            } else {
+                return response()->json([
+                    "message" => "No Order found"
                 ], 302);
             }
         }
