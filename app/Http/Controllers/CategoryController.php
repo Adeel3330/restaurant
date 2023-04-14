@@ -29,7 +29,7 @@ class CategoryController extends Controller
             }
             else
             {
-                if(move_uploaded_file($_FILES['image']['tmp_name'],'../public/image/category/'. $_FILES['image']['name'])){
+                if(move_uploaded_file($_FILES['image']['tmp_name'],$_SERVER['DOCUMENT_ROOT'].'/image/category/'. $_FILES['image']['name'])){
                     $category = new Categories();
                     $category->name = $request->name;
                     $category->restaurant_id = $request->restaurant_id;
@@ -159,8 +159,8 @@ class CategoryController extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink('../public/image/category/' .  Categories::where('id', $id)->first()->image);
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/category/' . $_FILES['image']['name'])) {
+                    unlink($_SERVER['DOCUMENT_ROOT'].'/image/category/' .  Categories::where('id', $id)->first()->image);
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/category/' . $_FILES['image']['name'])) {
                         $category = Categories::where('id',$id)->update([
                             'name'=>$request->name,
                             'restaurant_id'=>$request->restaurant_id,

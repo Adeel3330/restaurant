@@ -29,7 +29,7 @@ class ProductController extends Controller
                     "message" => "Max file size is 2mb"
                 ], 302);
             } else {
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/sub_category/' . $_FILES['image']['name'])) {
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/product/' . $_FILES['image']['name'])) {
                     $category = new Products();
                     $category->name = $request->name;
                     $category->category_id = $request->category_id;

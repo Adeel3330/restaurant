@@ -30,7 +30,7 @@ class RestaurantController extends Controller
                     "message" => "Max file size is 2mb"
                 ], 302);
             } else {
-                if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/restaurants/' . $_FILES['image']['name'])) {
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/restaurants/' . $_FILES['image']['name'])) {
                     $category = new Restaurants();
                     $category->name = $request->name;
                     $category->image = $_FILES['image']['name'];
@@ -146,8 +146,8 @@ class RestaurantController extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink('../public/image/restaurants/' .  Restaurants::where('id', $id)->first()->image);
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], '../public/image/restaurants/' . $_FILES['image']['name'])) {
+                    unlink($_SERVER['DOCUMENT_ROOT'].'/image/restaurants' .  Restaurants::where('id', $id)->first()->image);
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/restaurants' . $_FILES['image']['name'])) {
                         $category = restaurants::where('id', $id)->update([
                             'name' => $request->name,
                             'image' => $_FILES['image']['name'],

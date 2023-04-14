@@ -147,7 +147,7 @@ class SubcategoryController extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink($_SERVER['DOCUMENT_ROOT'].'/image/category/' .  SubCategories::where('id', $id)->first()->image);
+                    unlink($_SERVER['DOCUMENT_ROOT']. '/image/sub_category/' .  SubCategories::where('id', $id)->first()->image);
                     if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/sub_category/' . $_FILES['image']['name'])) {
                         $category = SubCategories::where('id', $id)->update([
                             'name' => $request->name,
