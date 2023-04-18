@@ -118,7 +118,7 @@ class OrderController extends Controller
         $orderscreate->order_no = $order_no;
         $orderscreate->save();
         foreach($request->items as $key=>$item){
-            $order = Orders::where('user_id',$sid)->where('status','pending')->first();
+            $order = Orders::where('user_id',$sid)->where('status','pending')->orderBy('created_at','desc')->first();
             $order_id = $order['id'];
             $order_items = new OrderItems;
             $order_items->order_id = $order_id;
