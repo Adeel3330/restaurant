@@ -255,9 +255,9 @@ class OrderController extends Controller
         if (!$id) {
             $order = Orders::where('status', '!=', 'delete')->where('user_id', $sid);
             if ($order->count() > 0) {
-                $order_items = OrderItems::with('product')->get();
                 $orders = $order->with('user')->get();
                 foreach($orders as $order){
+                    $order_items = OrderItems::where('order_id',$order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
@@ -269,13 +269,12 @@ class OrderController extends Controller
         } else {
             $order = Orders::where('status', '!=', 'delete')->where('id', $id)->where('user_id', $sid);
             if ($order->count() > 0) {
-                $order_items = OrderItems::with('product')->get();
                 $orders = $order->with('user')->get();
                 foreach ($orders as $order) {
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
-                return response()->json($order->with('user', 'product')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No Order found"
