@@ -45,12 +45,12 @@ class UserController extends Controller
                 ], 200);
             } else {
                 return response()->json([
-                    'mesage' => "Password not verify try again !"
+                    'message' => "Password not verify try again !"
                 ], 302);
             }
         } else {
             return response()->json([
-                'mesage' => "Email not exists"
+                'message' => "Email not exists"
             ], 302);
         }
     }
@@ -78,11 +78,11 @@ class UserController extends Controller
             $res = $user->save();
             if ($res) {
                 return response()->json([
-                    'mesage' => "User Created successfully"
+                    'message' => "User Created successfully"
                 ], 200);
             } else {
                 return response()->json([
-                    'mesage' => "Something went wrong"
+                    'message' => "Something went wrong"
                 ], 302);
             }
         }
@@ -99,7 +99,7 @@ class UserController extends Controller
                 return response()->json($usersresult, 200);
             } else {
                 return response()->json([
-                    'mesage' => "No Records Found"
+                    'message' => "No Records Found"
                 ], 302);
             }
         } else {
@@ -111,7 +111,7 @@ class UserController extends Controller
                 return response()->json($usersresult, 200);
             } else {
                 return response()->json([
-                    'mesage' => "No Records Found"
+                    'message' => "No Records Found"
                 ], 302);
             }
         }
@@ -127,16 +127,16 @@ class UserController extends Controller
             $update = $users->update(['status' => 'delete']);
             if ($update) {
                 return response()->json([
-                    'mesage' => "User Delete successfully"
+                    'message' => "User Delete successfully"
                 ], 200);
             } else {
                 return response()->json([
-                    'mesage' => "Something Went wrong"
+                    'message' => "Something Went wrong"
                 ], 302);
             }
         } else {
             return response()->json([
-                'mesage' => "Invalid Id or record already deleted"
+                'message' => "Invalid Id or record already deleted"
             ], 302);
         }
     }
@@ -271,12 +271,12 @@ class UserController extends Controller
                 ], 200);
             } else {
                 return response()->json([
-                    'mesage' => "Password not verify try again !"
+                    'message' => "Password not verify try again !"
                 ], 302);
             }
         } else {
             return response()->json([
-                'mesage' => "Email not exists"
+                'message' => "Email not exists"
             ], 302);
         }
     }
@@ -316,11 +316,11 @@ class UserController extends Controller
             ]);
             if ($res) {
                 return response()->json([
-                    'mesage' => "User Updated successfully"
+                    'message' => "User Updated successfully"
                 ], 200);
             } else {
                 return response()->json([
-                    'mesage' => "Something went wrong"
+                    'message' => "Something went wrong"
                 ], 302);
             }
         }

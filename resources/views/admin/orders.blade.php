@@ -1,0 +1,101 @@
+@extends('admin.include.sidebar')
+
+@section('body')
+
+<!-- Row -->
+<div class="row mt-25">
+    <div class="col-sm-12">
+        <div class="panel panel-default card-view">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h6 class="panel-title txt-dark">Orders List</h6>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-wrapper collapse in">
+                <div class="panel-body">
+                    <div class="table-wrap">
+                        <div class="table-responsive">
+                            <table id="example" class="table table-hover display  pb-30">
+                                <thead>
+                                    <tr>
+                                        <th>ID #</th>
+                                        <th>User</th>
+                                        <!-- <th>Product</th> -->
+                                        <th>Total Items</th>
+                                        <th>Transaction Id</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                         <th>ID #</th>
+                                        <th>User</th>
+                                        <!-- <th>Product</th> -->
+                                        <th>Total Items</th>
+                                        <th>Transaction Id</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    @forelse ($orders as $order)
+                                   
+                                    <tr>
+                                        <td>{{ $order->id }}</td>
+                                        <td>{{ $order->user->name }}</td>
+                                        
+                                        <td>{{ count($order->orders_items) }}</td>
+                                        <td>{{ $order->transaction_id }}</td>
+                                        <td ><span class='{{ $order->status == "pending" ? "label label-primary font-weight-100":"label label-success font-weight-100" }}'>{{ $order->status }}</span></td>
+                                        <td><a href="/admin/order-detail/{{ $order->id }}"  class="text-inverse" title="" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>
+                                        @if($order->status == 'pending')  
+                                        <a href="javascript:void(0)" onclick="ordercomplete('<?php echo $order->id ?>','completed')"  class="text-inverse" title="" data-toggle="tooltip" data-original-title="Completed"><i class="fa fa-check"></i></a>
+                                        @endif
+                                    </td>
+                                    </tr>
+
+                                    @empty
+                                    <tr>
+                                        <td colspan="8">No Record Found</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Row -->
+
+@stop
+
+@section('scripts')
+<script>
+function ordercomplete(id){
+    $.ajax({
+        url:"/admin/order_update/"+id,
+        method:"GET",
+        success:function(data){
+            console.log(data)
+            popup(data.message,true)
+             setTimeout(function() {
+                        window.location.assign('/admin/orders')
+            }, 500)
+        },
+        error:function(data){
+            console.log(data.status)
+            if (data.status == 302) {
+                console.log(data.responseJSON.message);
+                popup(data.responseJSON.message);
+            }
+        }
+    })
+}
+
+</script>
+@stop

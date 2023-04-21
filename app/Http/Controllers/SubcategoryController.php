@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SubcategoryController extends Controller
 {
-    //
-    //
+    
     public function sub_category_create(Request $request)
     {
         $validator = Validator::make($request->all(), [
