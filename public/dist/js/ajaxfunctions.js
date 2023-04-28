@@ -19,6 +19,10 @@
    
 // });
 
+toastr.options = {
+    'progressBar': true,
+}
+
 var SweetAlert = function () { };
 
 //examples 
@@ -42,6 +46,7 @@ function deleteItem(id,url,message){
 }
   
 };
+
 function popup(message, success) {
     if (success) {
         toastr.success(message,'success')

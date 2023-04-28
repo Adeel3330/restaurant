@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\RestaurantTimingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -151,6 +152,8 @@ Route::middleware('AdminLoginApi')->controller(RestaurantController::class)->gro
     Route::post('/v3/edit_restaurant/{id}', 'edit_restaurant');
     Route::post('/v3/delete_restaurant/{id}', 'delete_restaurant');
 });
+
+
 
 Route::middleware('LoginApi')->controller(RestaurantController::class)->group(function () {
     Route::get('/get_distance', 'get_distance');

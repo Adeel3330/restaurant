@@ -78,6 +78,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Flavours</label>
+                                        <select name="flavour_ids[]" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" multiple>
+                                            @forelse ($flavours as $flavour)
+                                            <option value="{{ $flavour->id }}" @foreach($product->flavour_ids as $flavour_id)
+                                                {{$flavour_id->flavour_id == $flavour->id ? "selected":"" }}
+                                                @endforeach
+                                                >{{ $flavour->name }}
+                                            </option>
+                                            @empty
+                                            <option value="">No flavour found</option>
+                                            @endforelse
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="seprator-block"></div>
                             <h6 class="txt-dark capitalize-font"><i class="icon-picture mr-10"></i>upload image</h6>
                             <hr>
@@ -123,7 +142,7 @@
         var id = $("#product_id").val();
         // console.log(form);
         $.ajax({
-            url: "/admin/edit_product/"+id,
+            url: "/admin/edit_product/" + id,
             method: "POST",
             data: formData,
             contentType: false, //this is requireded please see answers above

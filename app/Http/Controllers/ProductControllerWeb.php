@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\FlavourProducts;
+use App\Models\ProductFlavours;
 use App\Models\Products;
 use App\Models\Restaurants;
 use App\Models\SubCategories;
@@ -21,7 +23,8 @@ class ProductControllerWeb extends Controller
             'name' => ['required', Rule::unique('products')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
             'price' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'flavour_ids'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -43,6 +46,13 @@ class ProductControllerWeb extends Controller
                     $category->price = $request->price;
                     $category->status = "Active";
                     if ($category->save()) {
+                        $product_id = Products::where('status','Active')->orderBy('id','desc')->first()['id'];
+                        foreach($request->flavour_ids as $flavour){
+                            FlavourProducts::create([
+                                'product_id'=>$product_id,
+                                'flavour_id'=>$flavour,
+                            ]);
+                        }
                         return response()->json([
                             "message" => "Product created successfully"
                         ], 200);
@@ -107,7 +117,8 @@ class ProductControllerWeb extends Controller
                     'restaurant_id' => 'required',
                     'image' => ['required', Rule::imageFile()],
                     'description' => 'required',
-                    'price' => 'required'
+                    'price' => 'required',
+                    'flavour_ids'=>'required',
 
                 ]);
             } else {
@@ -117,7 +128,8 @@ class ProductControllerWeb extends Controller
                     'sub_category_id' => 'required',
                     'description' => 'required',
                     'price' => 'required',
-                    'restaurant_id' => 'required'
+                    'restaurant_id' => 'required',
+                    'flavour_ids'=>'required'
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -148,6 +160,14 @@ class ProductControllerWeb extends Controller
                             'price' => $request->price,
                         ]);
                         if ($category) {
+                            $flavour = FlavourProducts::where('product_id',$id)->delete();
+                            foreach($request->flavour_ids as $flavour){
+                                FlavourProducts::create([
+                                    'product_id' => $id,
+                                    'flavour_id' => $flavour
+                                ]);
+                            }
+                            
                             return response()->json([
                                 "message" => "Product updated successfully"
                             ], 200);
@@ -171,6 +191,13 @@ class ProductControllerWeb extends Controller
                         'restaurant_id' => $request->restaurant_id,
                     ]);
                     if ($category) {
+                        $flavour = FlavourProducts::where('product_id', $id)->delete();
+                        foreach ($request->flavour_ids as $flavour) {
+                            FlavourProducts::create([
+                                'product_id' => $id,
+                                'flavour_id' => $flavour
+                            ]);
+                        }
                         return response()->json([
                             "message" => "Products updated successfully"
                         ], 200);
@@ -212,7 +239,8 @@ class ProductControllerWeb extends Controller
         $restaurants = Restaurants::where('status','Active')->get();
         $categories =Categories::where('status', 'Active')->get();
         $sub_categories = SubCategories::where('status', 'Active')->get();
-        return view('admin.product-create',compact('restaurants','categories','sub_categories'));
+        $flavours = ProductFlavours::where('status', 'Active')->get();
+        return view('admin.product-create',compact('restaurants','categories','sub_categories','flavours'));
     }
     
 
@@ -221,9 +249,12 @@ class ProductControllerWeb extends Controller
         $restaurants = Restaurants::where('status', 'Active')->get();
         $categories = Categories::where('status', 'Active')->get();
         $sub_categories = SubCategories::where('status', 'Active')->get();
-        $products = Products::where('status','Active')->where('id',$id)->with('restaurant', 'category', 'sub_category');
+        $flavours = ProductFlavours::where('status', 'Active')->get();
+        $products = Products::where('status','Active')->where('id',$id)->with('restaurant', 'category', 'sub_category', 'flavour_ids');
         if($products->count() <= 0) return redirect('/admin/products');
         $product = $products->first();
-        return view('admin.product-edit', compact('restaurants', 'categories', 'sub_categories','product'));
+        return view('admin.product-edit', compact('restaurants', 'categories', 'sub_categories','product','flavours'));
     }
+
+
 }

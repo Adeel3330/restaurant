@@ -18,8 +18,11 @@ class RestaurantController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', Rule::unique('restaurants')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
-            'longitude'=>'required',
-            'latitude'=>'required'
+            'longitude' => 'required',
+            'latitude' => 'required',
+            'address' => 'required',
+            'phone_no' => 'required',
+            'week_ids' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -36,6 +39,9 @@ class RestaurantController extends Controller
                     $category->image = $_FILES['image']['name'];
                     $category->longitude = $request->longitude;
                     $category->latitude = $request->latitude;
+                    $category->address = $request->address;
+                    $category->phone_no = $request->phone_no;
+                    // $category->week_id = $request->week_id;
                     $category->status = "Active";
                     if ($category->save()) {
                         return response()->json([
@@ -88,7 +94,7 @@ class RestaurantController extends Controller
             if ($category->count() > 0) {
 
                 return response()->json(
-                    $category->get(),
+                    $category->with('week_ids')->get(),
                     200
                 );
             } else {
@@ -101,7 +107,7 @@ class RestaurantController extends Controller
             if ($category->count() > 0) {
 
                 return response()->json(
-                    $category->get(),
+                    $category->with('week_ids')->get(),
                     200
                 );
             } else {
@@ -123,6 +129,9 @@ class RestaurantController extends Controller
                     'image' => ['required', Rule::imageFile()],
                     'longitude' => ['required'],
                     'latitude' => ['required'],
+                    'address'=>'required',
+                    'phone_no'=>'required',
+                    'week_id'=>'required'
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
@@ -146,13 +155,16 @@ class RestaurantController extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink($_SERVER['DOCUMENT_ROOT'].'/image/restaurants' .  Restaurants::where('id', $id)->first()->image);
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/restaurants' . $_FILES['image']['name'])) {
+                    unlink($_SERVER['DOCUMENT_ROOT'] . '/image/restaurants' .  Restaurants::where('id', $id)->first()->image);
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/restaurants' . $_FILES['image']['name'])) {
                         $category = restaurants::where('id', $id)->update([
                             'name' => $request->name,
                             'image' => $_FILES['image']['name'],
                             'longitude' => $request->longitude,
                             'latitude' => $request->latitude,
+                            'address' => $request->address,
+                            'phone_no' => $request->phone_no,
+                            'week_id' => $request->week_id,
                         ]);
                         if ($category) {
                             return response()->json([
@@ -173,6 +185,9 @@ class RestaurantController extends Controller
                         'name' => $request->name,
                         'longitude' => $request->longitude,
                         'latitude' => $request->latitude,
+                        'address' => $request->address,
+                        'phone_no' => $request->phone_no,
+                        'week_id' => $request->week_id,
                     ]);
                     if ($category) {
                         return response()->json([
@@ -192,26 +207,27 @@ class RestaurantController extends Controller
         }
     }
 
-    public function get_distance(){
+    public function get_distance()
+    {
         $sid = Session::get('id');
-        $user = UsersAdditionals::where('user_id',$sid)->where('status','Active');
-        if($user->count() <= 0) {
+        $user = UsersAdditionals::where('user_id', $sid)->where('status', 'Active');
+        if ($user->count() <= 0) {
             return response()->json([
-                "message","Please insert location first"
+                "message", "Please insert location first"
             ], 302);
         }
         $user = $user->first();
-        $restaurants = Restaurants::where('status','Active')->get();
-        $rest_arr =[];
-        foreach($restaurants as $restaurant){
+        $restaurants = Restaurants::where('status', 'Active')->get();
+        $rest_arr = [];
+        foreach ($restaurants as $restaurant) {
 
-            $distance = $this->distance($restaurant['latitude'],$restaurant['longitude'], $user['latitude'], $user['longitude'],"K");
+            $distance = $this->distance($restaurant['latitude'], $restaurant['longitude'], $user['latitude'], $user['longitude'], "K");
             // return round($distance,2);
             // if($distance <= 30){
-                $restaurant["distance"] = $distance;
-                $rest_arr[] = $restaurant;
+            $restaurant["distance"] = $distance;
+            $rest_arr[] = $restaurant;
             // }
-            
+
             // var_dump($restaurant);
         }
         return $rest_arr;

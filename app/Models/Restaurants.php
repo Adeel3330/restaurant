@@ -18,4 +18,12 @@ class Restaurants extends Model
         
 
     ];
+
+    public function week_ids(){
+       return  $this->hasMany(RestaurantTimeItems::class,'restaurant_id')->with('restaurant_timings');
+    }
+
+
+    
+    
 }

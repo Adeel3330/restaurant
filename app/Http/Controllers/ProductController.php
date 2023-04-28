@@ -91,7 +91,7 @@ class ProductController extends Controller
             if ($category->count() > 0) {
 
                 return response()->json(
-                    $category->with('category')->with('sub_category','restaurant')->get(),
+                    $category->with('category')->with('sub_category','restaurant','flavour_ids')->get(),
                     200
                 );
             } else {
@@ -100,7 +100,7 @@ class ProductController extends Controller
                 ], 302);
             }
         } else {
-            $category = Products::with('category','sub_category','restaurant')->where('status', 'Active')->where('id', $id);
+            $category = Products::with('category','sub_category','restaurant','flavour_ids')->where('status', 'Active')->where('id', $id);
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -221,7 +221,7 @@ class ProductController extends Controller
         } 
         $products = Products::where('restaurant_id',$request->id)->where('name','LIKE','%'.$request->search."%");
         if($products->count() > 0){
-            return response()->json($products->with('restaurant','category','sub_category')->get(), 200);
+            return response()->json($products->with('restaurant','category','sub_category', 'flavour_ids')->get(), 200);
         }
         else
         {

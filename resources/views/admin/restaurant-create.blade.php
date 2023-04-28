@@ -34,7 +34,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Latitude</label>
-                                        <input type="text" id="lastName" class="form-control" name="latitude" required placeholder="Please enter latitude">
+                                        <input type="text" id="latitude" class="form-control" name="latitude" required placeholder="Please enter latitude">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Address</label>
+                                        <input type="text" id="address" class="form-control" name="address" required placeholder="Please enter address">
                                     </div>
                                 </div>
                                 <!--/span-->
@@ -42,6 +48,31 @@
                                 <!--/span-->
                             </div>
 
+                            <!-- Row -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Phone No</label>
+                                        <input type="text" id="phone_no" class="form-control" name="phone_no" required placeholder="Please enter Phone no">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Weeks Timings</label>
+                                        <select name="week_ids[]" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" multiple>
+                                            @forelse ($weeks as $week)
+                                            <option value="{{ $week->id }}">{{ $week->name }}</option>
+                                            @empty
+                                            <option value="">No week found</option>
+                                            @endforelse
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--/span-->
+
+                                <!--/span-->
+                            </div>
 
 
                             <div class="seprator-block"></div>

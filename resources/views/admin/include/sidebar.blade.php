@@ -20,6 +20,7 @@
 
     <!-- Custom CSS -->
     <link href="{{ url('/dist/css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url('/dist/css/glyphicons.less') }}" rel="stylesheet" type="text/css">
     <link href="{{ url('/vendors/bower_components/sweetalert/dist/sweetalert.css') }}">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <!-- bootstrap-select CSS -->
@@ -128,10 +129,10 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="/admin/carts"><i class="icon-basket-loaded mr-10"></i>Carts <span class="pull-right"><span class="label label-info mr-10">9</span></span></a>
+                    <a href="/admin/carts"><i class="icon-basket-loaded mr-10"></i>Carts <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>
-                    <a href="/admin/orders"><i class="fa fa-first-order mr-10"></i>Orders <span class="pull-right"><span class="label label-info mr-10">9</span></span></a>
+                    <a href="/admin/orders"><i class="fa fa-first-order mr-10"></i>Orders <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
             </ul>
         </div>
@@ -238,7 +239,7 @@
 
         <script>
             var SweetAlert = function() {};
-            
+
 
             /* Bootstrap Select Init*/
             $('.selectpicker').selectpicker();
@@ -312,7 +313,5 @@
         @yield('scripts')
 </body>
 
-
-<!-- Mirrored from hencework.com/theme/kenny/blank.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 19 Apr 2023 09:50:17 GMT -->
 
 </html>

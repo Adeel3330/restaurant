@@ -29,6 +29,11 @@ class Products extends Model
         return $this->belongsTo(Restaurants::class);
     }
 
+    public function flavour_ids()
+    {
+        return  $this->hasMany(FlavourProducts::class, 'product_id')->with('flavours');
+    }
+
     protected $fillable = [
         'name',
         'image',

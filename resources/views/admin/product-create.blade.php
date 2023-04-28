@@ -74,7 +74,22 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Price</label>
-                                        <input type="number" name="price" required  class="form-control" placeholder="Enter product description">
+                                        <input type="number" name="price" required class="form-control" placeholder="Enter product description">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Flavours</label>
+                                        <select name="flavour_ids[]" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" multiple>
+                                            @forelse ($flavours as $flavour)
+                                            <option value="{{ $flavour->id }}">{{ $flavour->name }}</option>
+                                            @empty
+                                            <option value="">No flavour found</option>
+                                            @endforelse
+
+                                        </select>
                                     </div>
                                 </div>
                             </div>

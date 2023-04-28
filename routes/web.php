@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductControllerWeb;
 use App\Http\Controllers\CategoryControllerWeb;
 use App\Http\Controllers\RestaurantControllerWeb;
 use App\Http\Controllers\SubcategoryControllerWeb;
+use App\Http\Controllers\RestaurantTimingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,16 @@ Route::middleware('AdminWebLogin')->controller(UserControllerWeb::class)->group(
     Route::get('/v3/users/{id}', 'getusers');
     Route::get('/admin/logout','logout');
    
+});
+
+Route::middleware('AdminWebLogin')->controller(RestaurantTimingController::class)->group(function () {
+    Route::view('/admin/week-create', '/admin/week-create');
+    Route::get('/admin/week_days', 'week_days');
+    Route::get('/admin/week_days/{id}', 'week_days');
+    Route::post('/admin/week_day_create', 'week_day_create');
+    Route::get('/admin/week-edit/{id}', 'edit_week_day');
+    Route::post('/admin/week_day_edit/{id}','week_day_edit');
+    Route::get('/admin/delete_week_day/{id}', 'delete_week_day');
 });
 
 Route::middleware('AdminWebLogin')->controller(CategoryControllerWeb::class)->group(function () {
@@ -102,7 +113,7 @@ Route::middleware('AdminWebLogin')->controller(OrderControllerWeb::class)->group
 
 
 Route::middleware('AdminWebLogin')->controller(RestaurantControllerWeb::class)->group(function () {
-    Route::view('/admin/restaurant-create', '/admin/restaurant-create');
+    Route::get('/admin/restaurant-create', 'restaurant_create_view');
     Route::get('/admin/restaurants', 'restaurants');
     Route::get('/admin/restaurants/{id}', 'restaurants');
     Route::post('/admin/restaurant_create', 'restaurant_create');
