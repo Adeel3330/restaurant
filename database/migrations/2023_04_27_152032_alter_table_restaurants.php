@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('restaurants', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('week_id');
-        });
+        // Schema::table('restaurants', function (Blueprint $table) {
+        //     $table->dropConstrainedForeignId('week_id');
+        // });
 
         
     }
