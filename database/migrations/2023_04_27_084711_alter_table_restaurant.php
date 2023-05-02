@@ -19,12 +19,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::table('restaurants', function (Blueprint $table) {
-            $table->string('address');
-            $table->unsignedBigInteger('week_id')->nullable();
-            $table->foreign('week_id')->references('id')->on('restaurants_timings')->change();
-            $table->string('phone_no');
-        });
+        // Schema::table('restaurants', function (Blueprint $table) {
+        //     $table->string('address');
+        //     $table->unsignedBigInteger('week_id')->nullable();
+        //     $table->foreign('week_id')->references('id')->on('restaurants_timings')->change();
+        //     $table->string('phone_no');
+        // });
     }
 
     /**
@@ -32,11 +32,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::create('restaurants', function (Blueprint $table) {
-            $table->dropColumn('address');
-            $table->dropConstrainedForeignId('week_id');
-            $table->dropColumn('phone_no');
-        });
+        // Schema::create('restaurants', function (Blueprint $table) {
+        //     $table->dropColumn('address');
+        //     $table->dropConstrainedForeignId('week_id');
+        //     $table->dropColumn('phone_no');
+        // });
         
         Schema::dropIfExists('restaurants_timings');
     }
