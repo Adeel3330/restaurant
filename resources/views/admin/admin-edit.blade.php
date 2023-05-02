@@ -48,8 +48,9 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="img-upload-wrap">
-                                        <div id="imagePreview"></div>
-                                        <img class="img-responsive" src="{{ $admin->image ? url('/image/admin/'.$admin->image):url('dist/img/user1.png') }}" alt="upload_img">
+                                        <div id="imagePreview">
+                                            <img class="img-responsive" src="{{ $admin->image ? url('/image/admin/'.$admin->image):url('dist/img/user1.png') }}" alt="upload_img">
+                                        </div>
                                     </div>
                                     <div class="fileupload btn btn-info btn-anim"><i class="fa fa-upload"></i><span class="btn-text">Upload new image</span>
                                         <input type="file" class="upload" name="image" id="uploadFile" accept="image/*">
