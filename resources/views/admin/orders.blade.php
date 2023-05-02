@@ -30,7 +30,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                         <th>ID #</th>
+                                        <th>ID #</th>
                                         <th>User</th>
                                         <!-- <th>Product</th> -->
                                         <th>Total Items</th>
@@ -41,19 +41,19 @@
                                 </tfoot>
                                 <tbody>
                                     @forelse ($orders as $order)
-                                   
+
                                     <tr>
                                         <td>{{ $order->id }}</td>
                                         <td>{{ $order->user->name }}</td>
-                                        
+
                                         <td>{{ count($order->orders_items) }}</td>
                                         <td>{{ $order->transaction_id }}</td>
-                                        <td ><span class='{{ $order->status == "pending" ? "label label-primary font-weight-100":"label label-success font-weight-100" }}'>{{ $order->status }}</span></td>
-                                        <td><a href="/admin/order-detail/{{ $order->id }}"  class="text-inverse" title="" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>
-                                        @if($order->status == 'pending')  
-                                        <a href="javascript:void(0)" onclick="ordercomplete('<?php echo $order->id ?>','completed')"  class="text-inverse" title="" data-toggle="tooltip" data-original-title="Completed"><i class="fa fa-check"></i></a>
-                                        @endif
-                                    </td>
+                                        <td><span class='{{ $order->status == "pending" ? "label label-primary font-weight-100":"label label-success font-weight-100" }}'>{{ $order->status }}</span></td>
+                                        <td><a href="/admin/order-detail/{{ $order->id }}" class="text-inverse" title="" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>
+                                            @if($order->status == 'pending')
+                                            <a href="javascript:void(0)" onclick="ordercomplete('<?php echo $order->id ?>','completed')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Completed"><i class="fa fa-check"></i></a>
+                                            @endif
+                                        </td>
                                     </tr>
 
                                     @empty
@@ -76,26 +76,33 @@
 
 @section('scripts')
 <script>
-function ordercomplete(id){
-    $.ajax({
-        url:"/admin/order_update/"+id,
-        method:"GET",
-        success:function(data){
-            console.log(data)
-            popup(data.message,true)
-             setTimeout(function() {
-                        window.location.assign('/admin/orders')
-            }, 500)
-        },
-        error:function(data){
-            console.log(data.status)
-            if (data.status == 302) {
-                console.log(data.responseJSON.message);
-                popup(data.responseJSON.message);
+    function ordercomplete(id) {
+        $.ajax({
+            url: "/admin/order_update/" + id,
+            method: "GET",
+            success: function(data) {
+                console.log(data)
+                popup(data.message, true)
+                setTimeout(function() {
+                    window.location.assign('/admin/orders')
+                }, 500)
+            },
+            error: function(data) {
+                console.log(data.status)
+                $("#spinner").hide();
+                $("#updatebtn").text("");
+                $("#updatebtn").append("<i class='fa fa-check'></i>Save")
+                var array = $.map(data.responseJSON, function(value, index) {
+                    return [value];
+                });
+                array.forEach(element => {
+                    // element.forEach(data => {
+                    console.log(element)
+                    popup(element);
+                    // });
+                });
             }
-        }
-    })
-}
-
+        })
+    }
 </script>
 @stop

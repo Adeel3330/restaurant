@@ -110,11 +110,18 @@
             },
             error: function(data) {
                 console.log(data.status)
-                if (data.status == 302) {
-                    $("#spinner").hide();
-                    console.log(data.responseJSON.message);
-                    popup(data.responseJSON.message);
-                }
+                $("#spinner").hide();
+                $("#updatebtn").text("");
+                $("#updatebtn").append("<i class='fa fa-check'></i>Save")
+                var array = $.map(data.responseJSON, function(value, index) {
+                    return [value];
+                });
+                array.forEach(element => {
+                    // element.forEach(data => {
+                    console.log(element)
+                    popup(element);
+                    // });
+                });
 
             }
         });

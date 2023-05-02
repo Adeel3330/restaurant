@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserControllerWeb;
+use App\Http\Controllers\AdminControllerWeb;
 use App\Http\Controllers\OrderControllerWeb;
 use App\Http\Controllers\BannerControllerWeb;
 use App\Http\Controllers\ProductControllerWeb;
@@ -120,4 +122,17 @@ Route::middleware('AdminWebLogin')->controller(RestaurantControllerWeb::class)->
     Route::post('/admin/edit_restaurant/{id}', 'edit_restaurant');
     Route::get('/admin/delete_restaurant/{id}', 'delete_restaurant');
     Route::get('/admin/restaurant-edit/{id}','restaurant_edit');
+});
+
+
+
+Route::middleware('AdminWebLogin')->controller(AdminControllerWeb::class)->group(function () {
+    Route::post('/admin/admin_create', 'admin_create');
+    Route::get('/admin/delete_admin', 'delete_admin');
+    Route::get('/admin/delete_admin/{id}', 'delete_admin');
+    Route::post('/admin/edit_admin/{id}', 'edit_admin');
+    Route::get('/admin/admin-edit/{id}', 'edit_admin_view');
+    Route::get('/admin/admins', 'admins');
+    Route::get('/admin/admins/{id}', 'admins');
+    Route::get('/admin/admin-create', 'admin_create_view');
 });

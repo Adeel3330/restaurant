@@ -20,7 +20,7 @@ class ProductControllerWeb extends Controller
             'category_id' => 'required',
             'sub_category_id' => 'required',
             'restaurant_id' => 'required',
-            'name' => ['required', Rule::unique('products')->where('status', 'Active')],
+            'name' => ['required', Rule::unique('products')->where('restaurant_id',$request->restaurant_id)->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
             'price' => 'required',
             'description' => 'required',
@@ -78,7 +78,7 @@ class ProductControllerWeb extends Controller
             ], 302);
         }
         if (Products::where('id', $id)->where('status', 'Active')->count() > 0) {
-            $products = Products::where('sub_category_id', $id)->update([
+            $products = Products::where('id', $id)->update([
                 'status' => 'delete'
             ]);
             if ($products) {
@@ -133,7 +133,7 @@ class ProductControllerWeb extends Controller
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
-            if (Products::where('status', 'Active')->where('id', '!=', $id)->where('name', 'LIKE', $request->name)->count() > 0) {
+            if (Products::where('status', 'Active')->where('restaurant_id',$request->id)->where('id', '!=', $id)->where('name', 'LIKE', $request->name)->count() > 0) {
                 return response()->json([
                     "message" => "The name has already been taken"
                 ], 302);
