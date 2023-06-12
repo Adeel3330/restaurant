@@ -24,7 +24,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Restaurants</label>
-                                        <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
+                                        <select name="restaurant_ids[]" multiple class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
                                             @forelse ($restaurants as $restaurant)
                                             <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
                                             @empty

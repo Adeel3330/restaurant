@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from hencework.com/theme/kenny/blank.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 19 Apr 2023 09:50:17 GMT -->
 
 <head>
     <meta charset="UTF-8" />

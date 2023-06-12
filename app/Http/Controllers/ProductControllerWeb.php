@@ -19,7 +19,7 @@ class ProductControllerWeb extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'sub_category_id' => 'required',
-            'restaurant_id' => 'required',
+            'restaurant_ids' => 'required',
             'name' => ['required', Rule::unique('products')->where('restaurant_id',$request->restaurant_id)->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
             'price' => 'required',
@@ -36,23 +36,28 @@ class ProductControllerWeb extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/product/' . $_FILES['image']['name'])) {
+                    foreach ($request->restaurant_ids as $restaurant_id) {
+                    
                     $category = new Products();
                     $category->name = $request->name;
                     $category->category_id = $request->category_id;
-                    $category->restaurant_id = $request->restaurant_id;
+                    $category->restaurant_id = $restaurant_id;
                     $category->sub_category_id = $request->sub_category_id;
                     $category->image = $_FILES['image']['name'];
                     $category->description = $request->description;
                     $category->price = $request->price;
                     $category->status = "Active";
-                    if ($category->save()) {
-                        $product_id = Products::where('status','Active')->orderBy('id','desc')->first()['id'];
-                        foreach($request->flavour_ids as $flavour){
+                     $result =    $category->save();
+                    $product_id = Products::where('status', 'Active')->orderBy('id', 'desc')->first()['id'];
+                        foreach ($request->flavour_ids as $flavour) {
                             FlavourProducts::create([
-                                'product_id'=>$product_id,
-                                'flavour_id'=>$flavour,
+                                'product_id' => $product_id,
+                                'flavour_id' => $flavour,
                             ]);
                         }
+                    }
+                    if ($result) {
+                        
                         return response()->json([
                             "message" => "Product created successfully"
                         ], 200);

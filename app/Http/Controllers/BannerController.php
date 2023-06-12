@@ -14,7 +14,7 @@ class BannerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'image' => ['required', Rule::imageFile()],
-            'restaurant_id'=>'required'
+            'restaurant_ids'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -26,10 +26,12 @@ class BannerController extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/banner/' . $_FILES['image']['name'])) {
-                    $banner = new Banners();
-                    $banner->restaurant_id = $request->restaurant_id;
-                    $banner->image = $_FILES['image']['name'];
-                    $banner->status = "Active";
+                    foreach($request->restaurant_ids as $restaurant_id){
+                        $banner = new Banners();
+                        $banner->restaurant_id = $restaurant_id;
+                        $banner->image = $_FILES['image']['name'];
+                        $banner->status = "Active";
+                    }
                     if ($banner->save()) {
                         return response()->json([
                             "message" => "Banner created successfully"

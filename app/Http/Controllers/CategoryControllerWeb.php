@@ -18,7 +18,7 @@ class CategoryControllerWeb extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', Rule::unique('categories')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
-            'restaurant_id' => 'required'
+            'restaurant_ids' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -30,12 +30,16 @@ class CategoryControllerWeb extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/category/' . $_FILES['image']['name'])) {
-                    $category = new Categories();
-                    $category->name = $request->name;
-                    $category->restaurant_id = $request->restaurant_id;
-                    $category->image = $_FILES['image']['name'];
-                    $category->status = "Active";
-                    if ($category->save()) {
+                    foreach($request->restaurant_ids as $restaurant_id){
+                        $category = new Categories();
+                        $category->name = $request->name;
+                        $category->restaurant_id = $restaurant_id;
+                        $category->image = $_FILES['image']['name'];
+                        $category->status = "Active";
+                        $result = $category->save();
+                    }
+                    
+                    if ($result) {
                         return response()->json([
                             "message" => "Category created successfully"
                         ], 200);

@@ -18,7 +18,7 @@ class SubcategoryControllerWeb extends Controller
             'category_id' => 'required',
             'name' => ['required', Rule::unique('sub_categories')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
-            'restaurant_id' => 'required'
+            'restaurant_ids' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -30,13 +30,17 @@ class SubcategoryControllerWeb extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/sub_category/' . $_FILES['image']['name'])) {
-                    $category = new SubCategories();
-                    $category->category_id = $request->category_id;
-                    $category->name = $request->name;
-                    $category->restaurant_id = $request->restaurant_id;
-                    $category->image = $_FILES['image']['name'];
-                    $category->status = "Active";
-                    if ($category->save()) {
+
+                    foreach ($request->restaurant_ids as $restaurant_id) {
+                        $category = new SubCategories();
+                        $category->category_id = $request->category_id;
+                        $category->name = $request->name;
+                        $category->restaurant_id = $restaurant_id;
+                        $category->image = $_FILES['image']['name'];
+                        $category->status = "Active";
+                        $result = $category->save();
+                    }
+                    if ($result) {
                         return response()->json([
                             "message" => "Sub Category created successfully"
                         ], 200);
@@ -86,9 +90,7 @@ class SubcategoryControllerWeb extends Controller
     public function sub_categories($id = null)
     {
         $sub_categories = SubCategories::with('category', 'restaurant')->where('status', 'Active')->get();
-        return view('admin.subcategories',compact('sub_categories'));
-            
-        
+        return view('admin.subcategories', compact('sub_categories'));
     }
 
 
@@ -171,14 +173,16 @@ class SubcategoryControllerWeb extends Controller
         }
     }
 
-    public function sub_category_create_view(){
-        $categories = Categories::where('status','Active')->get();
+    public function sub_category_create_view()
+    {
+        $categories = Categories::where('status', 'Active')->get();
         $restaurants = Restaurants::where('status', 'Active')->get();
-        return view('admin.sub-category-create',compact('categories','restaurants'));
+        return view('admin.sub-category-create', compact('categories', 'restaurants'));
     }
-    public function  edit_sub_category_view($id){
-        $sub_category = SubCategories::where('status','Active')->where('id',$id);
-        if($sub_category->count() <= 0) return redirect('/admin/sub_categories');
+    public function  edit_sub_category_view($id)
+    {
+        $sub_category = SubCategories::where('status', 'Active')->where('id', $id);
+        if ($sub_category->count() <= 0) return redirect('/admin/sub_categories');
         $sub_category = $sub_category->first();
         $categories = Categories::where('status', 'Active')->get();
         $restaurants = Restaurants::where('status', 'Active')->get();

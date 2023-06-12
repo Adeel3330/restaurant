@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Mirrored from hencework.com/theme/kenny/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 19 Apr 2023 09:50:17 GMT -->
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Login | Restaurant</title>
-    <!-- <meta name="description" content="Kenny is a Dashboard & Admin Site Responsive Template by hencework." />
-    <meta name="keywords" content="admin, admin dashboard, admin template, cms, crm, Kenny Admin, kennyadmin, premium admin templates, responsive admin, sass, panel, software, ui, visualization, web app, application" />
-    <meta name="author" content="hencework" /> -->
+
 
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.ico">
@@ -149,6 +146,5 @@
     </script>
 </body>
 
-<!-- Mirrored from hencework.com/theme/kenny/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 19 Apr 2023 09:50:17 GMT -->
 
 </html>
