@@ -624,7 +624,7 @@ th {
 }
 
 .glyphicon-ok:before {
-    content: "\f00c";
+    content: "\f00c" !important;
     font-family: 'FontAwesome';
 }
 
