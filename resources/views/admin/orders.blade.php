@@ -3,6 +3,7 @@
 @section('body')
 
 <!-- Row -->
+<input id="_token" type="hidden" name="_token" value="{{ csrf_token() }}" />
 <div class="row mt-25">
     <div class="col-sm-12">
         <div class="panel panel-default card-view">
@@ -40,6 +41,7 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
+
                                     @forelse ($orders as $order)
 
                                     <tr>
@@ -48,10 +50,15 @@
 
                                         <td>{{ count($order->orders_items) }}</td>
                                         <td>{{ $order->transaction_id }}</td>
-                                        <td><span class='{{ $order->status == "pending" ? "label label-primary font-weight-100":"label label-success font-weight-100" }}'>{{ $order->status }}</span></td>
+                                        <td><span class='{{ $order->status != "Delivered" ? "label label-primary font-weight-100":"label label-success font-weight-100" }}'>{{ $order->status }}</span></td>
                                         <td><a href="/admin/order-detail/{{ $order->id }}" class="text-inverse" title="" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>
-                                            @if($order->status == 'pending')
-                                            <a href="javascript:void(0)" onclick="ordercomplete('<?php echo $order->id ?>','completed')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Completed"><i class="fa fa-check"></i></a>
+                                            @if($order->status == 'Accepting order')
+
+                                            <a href="javascript:void(0)" onclick="UpdateStatus('<?php echo $order->id ?>','/admin/order_update','Order','Preparing your meal')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Change status to Preparing your meal"><i class="fa fa-check"></i></a>
+
+                                            @elseif ($order->status == 'Preparing your meal')
+                                            <a href="javascript:void(0)" onclick="UpdateStatus('<?php echo $order->id ?>','/admin/order_update','Order','Ready for collection')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Change status to Ready for collection"><i class="fa fa-check"></i></a>
+
                                             @endif
                                         </td>
                                     </tr>
@@ -76,10 +83,13 @@
 
 @section('scripts')
 <script>
-    function ordercomplete(id) {
+    function ordercomplete(id, status) {
         $.ajax({
             url: "/admin/order_update/" + id,
-            method: "GET",
+            method: "POST",
+            header: {
+                'X-CSRF-TOKEN': '<?php echo csrf_token() ?>',
+            },
             success: function(data) {
                 console.log(data)
                 popup(data.message, true)

@@ -59,34 +59,32 @@ class OrderController extends Controller
             }
         }
     }
-    
-    public function order(Request $request){
+
+    public function order(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'transaction_id' => 'required',
             'items.*.product_id' => 'required',
             'items.*.payment' => 'required',
             'items.*.quantity' => 'required|numeric',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         }
-        // dd($request);
         $sid = $request->session()->get('id');
-        $carts = Orders::where('status', 'pending')->where('user_id', $sid)->where('transaction_id',$request->transaction_id);
+        $carts = Orders::where('status', 'Accepting order')->where('user_id', $sid)->where('transaction_id', $request->transaction_id);
         if ($carts->count() > 0) {
-           $order = $carts->first();
-           $order_id = $order['id'];
+            $order = $carts->first();
+            $order_id = $order['id'];
             foreach ($request->items as $item) {
-                $count = OrderItems::where('order_id', $order_id)->where('product_id',$item['product_id'])->count() ;
-                if($count > 0){
+                $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->count();
+                if ($count > 0) {
                     $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
                         'payment' => $item['payment'],
                         'quantity' => $item['quantity'],
-                    ]);   
-                }
-                else
-                {
+                    ]);
+                } else {
                     $order_items = OrderItems::create([
                         'product_id' => $item['product_id'],
                         'payment' => $item['payment'],
@@ -95,30 +93,26 @@ class OrderController extends Controller
                     ]);
                 }
             }
-            if($order_items){
+            if ($order_items) {
                 return response()->json([
                     "message" => "Order Updated successfully",
                 ], 200);
-            }
-            else
-            {
+            } else {
                 return response()->json([
                     "message" => "Something went wrong"
-                ], 302); 
+                ], 302);
             }
-            
-
         }
-      
+
         $order_no = Str::random(8);
         $orderscreate = new Orders;
         $orderscreate->user_id = $sid;
-        $orderscreate->status = "pending";
+        $orderscreate->status = "Accepting order";
         $orderscreate->transaction_id = $request->transaction_id;
         $orderscreate->order_no = $order_no;
         $orderscreate->save();
-        foreach($request->items as $key=>$item){
-            $order = Orders::where('user_id',$sid)->where('status','pending')->orderBy('created_at','desc')->first();
+        foreach ($request->items as $key => $item) {
+            $order = Orders::where('user_id', $sid)->where('status', 'Accepting order')->orderBy('created_at', 'desc')->first();
             $order_id = $order['id'];
             $order_items = new OrderItems;
             $order_items->order_id = $order_id;
@@ -127,24 +121,23 @@ class OrderController extends Controller
             $order_items->quantity = $item['quantity'];
             $res = $order_items->save();
         }
-        if($res){
-            $carts = AddtoCarts::where('user_id',$sid)->update([
-                'status'=>'delete',
-            ],200);
+        if ($res) {
+            $carts = AddtoCarts::where('user_id', $sid)->update([
+                'status' => 'delete',
+            ], 200);
             return response()->json([
                 "message" => "Product order successfully",
                 "order_no" => $order_no
             ], 200);
-        }
-        else
-        {
+        } else {
             return response()->json([
                 "message" => "Something went wrong"
-            ], 302);  
+            ], 302);
         }
         // exit;
-       
+
     }
+
 
 
     public function delete_add_to_cart($id){
@@ -284,25 +277,31 @@ class OrderController extends Controller
     }
 
 
-    public function order_update_status($id){
-        if(!$id){
-            return response()->json([
-                "message"=>"Please Enter Id of Order for update",
-            ],302);
-        }
-        $order = Orders::where('id',$id)->update([
-            'status'=> 'completed',
+    public function order_update_status($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required',
         ]);
-        if($order){
-            return response()->json([
-                "message" => "Order Completed successfully",
-            ], 200);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
         }
-        else{
+        if (!$id) {
+            return response()->json([
+                "message" => "Please Enter Id of Order for update",
+            ], 302);
+        }
+        $order = Orders::where('id', $id)->update([
+            'status' => $request->status,
+        ]);
+        if ($order) {
+            return response()->json([
+                "message" => "Order " . $request->status . " updated successfully",
+            ], 200);
+        } else {
             return response()->json([
                 "message" => "Something Went wrong",
             ], 200);
         }
     }
-
 }

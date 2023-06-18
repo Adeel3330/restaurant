@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Homecontroller;
@@ -7,8 +8,10 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\RestaurantTimingController;
@@ -160,3 +163,15 @@ Route::middleware('LoginApi')->controller(RestaurantController::class)->group(fu
     Route::get('/restaurants', 'restaurants');
     Route::get('/restaurants/{id}', 'restaurants');
 });
+
+
+Route::controller(DriverController::class)->group(function () {
+    Route::post('/register_driver', 'register_driver');
+    Route::post('/login_driver', 'login_driver');
+    Route::get('/driver/orders', 'orders');
+    Route::get('/driver/orders/{id}', 'orders');
+    Route::post('/driver/order_update_status/{id}', 'order_update_status');
+
+});
+
+

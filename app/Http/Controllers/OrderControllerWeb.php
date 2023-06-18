@@ -72,7 +72,7 @@ class OrderControllerWeb extends Controller
         }
         // dd($request);
         $sid = $request->session()->get('id');
-        $carts = Orders::where('status', 'pending')->where('user_id', $sid)->where('transaction_id', $request->transaction_id);
+        $carts = Orders::where('status', 'Accepting order')->where('user_id', $sid)->where('transaction_id', $request->transaction_id);
         if ($carts->count() > 0) {
             $order = $carts->first();
             $order_id = $order['id'];
@@ -106,12 +106,12 @@ class OrderControllerWeb extends Controller
         $order_no = Str::random(8);
         $orderscreate = new Orders;
         $orderscreate->user_id = $sid;
-        $orderscreate->status = "pending";
+        $orderscreate->status = "Accepting order";
         $orderscreate->transaction_id = $request->transaction_id;
         $orderscreate->order_no = $order_no;
         $orderscreate->save();
         foreach ($request->items as $key => $item) {
-            $order = Orders::where('user_id', $sid)->where('status', 'pending')->orderBy('created_at', 'desc')->first();
+            $order = Orders::where('user_id', $sid)->where('status', 'Accepting order')->orderBy('created_at', 'desc')->first();
             $order_id = $order['id'];
             $order_items = new OrderItems;
             $order_items->order_id = $order_id;
@@ -228,19 +228,26 @@ class OrderControllerWeb extends Controller
     }
 
 
-    public function order_update_status($id)
+    public function order_update_status($id,Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        }
         if (!$id) {
             return response()->json([
                 "message" => "Please Enter Id of Order for update",
             ], 302);
         }
         $order = Orders::where('id', $id)->update([
-            'status' => 'completed',
+            'status' => $request->status,
         ]);
         if ($order) {
             return response()->json([
-                "message" => "Order Completed successfully",
+                "message" => "Order ".$request->status." updated successfully",
             ], 200);
         } else {
             return response()->json([

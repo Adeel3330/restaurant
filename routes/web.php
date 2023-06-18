@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderControllerWeb;
 use App\Http\Controllers\BannerControllerWeb;
 use App\Http\Controllers\ProductControllerWeb;
 use App\Http\Controllers\CategoryControllerWeb;
+use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\RestaurantControllerWeb;
 use App\Http\Controllers\SubcategoryControllerWeb;
 use App\Http\Controllers\RestaurantTimingController;
@@ -108,7 +109,7 @@ Route::middleware('AdminWebLogin')->controller(ProductControllerWeb::class)->gro
 Route::middleware('AdminWebLogin')->controller(OrderControllerWeb::class)->group(function () {
     Route::get('/admin/carts', 'carts');
     Route::get('/admin/orders', 'orders');
-    Route::get('/admin/order_update/{id}', 'order_update_status');
+    Route::post('/admin/order_update/{id}', 'order_update_status');
     Route::get('/admin/delete_cart/{id}','delete_add_to_cart');
     Route::get('/admin/order-detail/{id}','order_detail');
 });
@@ -136,3 +137,18 @@ Route::middleware('AdminWebLogin')->controller(AdminControllerWeb::class)->group
     Route::get('/admin/admins/{id}', 'admins');
     Route::get('/admin/admin-create', 'admin_create_view');
 });
+
+Route::middleware('AdminWebLogin')->controller(DriverControllerWeb::class)->group(function () {
+    Route::post('/admin/driver_create', 'driver_create');
+    Route::get('/admin/delete_driver', 'delete_driver');
+    Route::get('/admin/delete_driver/{id}', 'delete_driver');
+    Route::post('/admin/edit_driver/{id}', 'edit_driver');
+    Route::get('/admin/driver-edit/{id}', 'edit_driver_view');
+    Route::get('/admin/drivers', 'drivers');
+    Route::get('/admin/drivers/{id}', 'drivers');
+    Route::get('/admin/driver-create', 'driver_create_view');
+    Route::post('/admin/update_driver_status/{id}', 'update_driver_status');
+});
+
+
+

@@ -144,6 +144,17 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#driver_dr"><i class="fa fa-users mr-10"></i>Drivers<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <ul id="driver_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="/admin/drivers">Driver</a>
+                        </li>
+                        <li>
+                            <a href="/admin/driver-create">Driver Create</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </div>
         <!-- /Left Sidebar Menu -->
@@ -292,6 +303,71 @@
                                     swalWithBootstrapButtons.fire(
                                         'Deleted!',
                                         'Your ' + message + ' has been deleted.',
+                                        'success'
+                                    )
+                                    setTimeout(function() {
+                                        location.reload(true);
+                                    }, 2000)
+                                }
+                            }
+
+                        })
+
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            'Your ' + message + ' is safe :)',
+                            'error'
+                        )
+                    }
+                })
+                return false;
+
+            }
+
+            function UpdateStatus(id, url, message, status) {
+                console.log(id, url, message);
+                var token = $("#_token").val();
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: "#fcb03b",
+                    confirmButtonText: "Yes, " + status + " it!",
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': token
+                            },
+                            url: url + '/' + id,
+                            method: "POST",
+                            data: {
+                                status: status,
+                            },
+                            error: function(data) {
+                                popup(data.responseJSON.message)
+                            },
+                            success: function(data) {
+                                console.log(data);
+                                if (data != "") {
+                                    swalWithBootstrapButtons.fire(
+                                        status+'!',
+                                        'Your ' + message + ' has been ' + status,
                                         'success'
                                     )
                                     setTimeout(function() {
