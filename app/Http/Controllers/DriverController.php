@@ -82,6 +82,11 @@ class DriverController extends Controller
             $password = $user['password'];
             $check = $user::where('password', Hash::check($request->password, $password));
             if ($check->count() == 0) {
+                if($user['status'] != 'Active'){
+                    return response()->json([
+                        'message'=>'Your information cannot be approved by Admin'
+                    ],302);
+                }
                 Session::put('id', $user['id']);
                 Session::put('name', $user['name']);
                 return response()->json([
