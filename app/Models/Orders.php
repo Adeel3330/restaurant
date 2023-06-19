@@ -14,10 +14,15 @@ class Orders extends Model
     {
         return $this->belongsTo(Users::class);
     }
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurants::class);
+    }
 
     protected $fillable = [
         'user_id',
         'transaction_id',
+        'restaurant_id',
         'status'
     ];
 }

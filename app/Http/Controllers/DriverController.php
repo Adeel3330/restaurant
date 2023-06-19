@@ -24,7 +24,7 @@ class DriverController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required'],
-            'email' => ['required', Rule::unique('drivers')->where('status', 'Active')],
+            'email' => ['required', Rule::unique('drivers')],
             'password' => ['required', Password::min(6)->numbers()->mixedCase()],
             'phone_no' => 'required',
             'image' => ['required', Rule::imageFile()],
@@ -110,9 +110,10 @@ class DriverController extends Controller
     public function orders($id = null)
     {
         if (!$id) {
-            $order = Orders::where('status','Ready for collection');
+            $order = DriverOrder::where('driver_id',session()->get('driver_id'));
+            // $order = Orders::where('status','Ready for collection');
             if ($order->count() > 0) {
-                $orders = $order->with('user')->get();
+                $orders = $order->with('order')->get();
                 foreach ($orders as $order) {
                     $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;
@@ -124,7 +125,7 @@ class DriverController extends Controller
                 ], 302);
             }
         } else {
-            $order = Orders::where('status', 'Ready for collection')->where('id', $id);
+            $order = DriverOrder::where('driver_id', session()->get('driver_id'))->where('id',$id);
             if ($order->count() > 0) {
                 $orders = $order->with('user')->get();
                 foreach ($orders as $order) {
@@ -160,10 +161,10 @@ class DriverController extends Controller
         ]);
         if ($order) {
             if($request->status == 'Collected' || $request->status == 'Driver on their way'){
-                DriverOrder::create([
-                    'driver_id'=>session()->get('id'),
-                    'order_id'=>$id,
-                ]);
+                // DriverOrder::create([
+                //     'driver_id'=>session()->get('id'),
+                //     'order_id'=>$id,
+                // ]);
             }
             return response()->json([
                 "message" => "Order " . $request->status . " updated successfully",

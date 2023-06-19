@@ -64,6 +64,7 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'transaction_id' => 'required',
+            'restaurant_id'=>'required',
             'items.*.product_id' => 'required',
             'items.*.payment' => 'required',
             'items.*.quantity' => 'required|numeric',
@@ -110,6 +111,7 @@ class OrderController extends Controller
         $orderscreate->status = "Accepting order";
         $orderscreate->transaction_id = $request->transaction_id;
         $orderscreate->order_no = $order_no;
+        $orderscreate->restaurant_id = $request->restaurant_id;
         $orderscreate->save();
         foreach ($request->items as $key => $item) {
             $order = Orders::where('user_id', $sid)->where('status', 'Accepting order')->orderBy('created_at', 'desc')->first();
@@ -134,7 +136,6 @@ class OrderController extends Controller
                 "message" => "Something went wrong"
             ], 302);
         }
-        // exit;
 
     }
 
@@ -171,7 +172,7 @@ class OrderController extends Controller
             if($order->count() > 0){
                 // $order->with('order_items')->get();
                 // dd($order);
-                return response()->json($order->with('user')->get(), 200);
+                return response()->json($order->with('user','restaurant')->get(), 200);
             }
             else
             {
@@ -184,7 +185,7 @@ class OrderController extends Controller
         {
             $order = Orders::where('status', '!=','delete')->where('id',$id);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->first(), 200);
+                return response()->json($order->with('user', 'product','restaurant')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No order found"
@@ -248,7 +249,7 @@ class OrderController extends Controller
         if (!$id) {
             $order = Orders::where('status', '!=', 'delete')->where('user_id', $sid);
             if ($order->count() > 0) {
-                $orders = $order->with('user')->get();
+                $orders = $order->with('user','restaurant')->get();
                 foreach($orders as $order){
                     $order_items = OrderItems::where('order_id',$order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;
@@ -262,7 +263,7 @@ class OrderController extends Controller
         } else {
             $order = Orders::where('status', '!=', 'delete')->where('id', $id)->where('user_id', $sid);
             if ($order->count() > 0) {
-                $orders = $order->with('user')->get();
+                $orders = $order->with('user','restaurant')->get();
                 foreach ($orders as $order) {
                     $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;

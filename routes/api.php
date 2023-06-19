@@ -193,8 +193,12 @@ Route::middleware('DriverLogin')->controller(DriverController::class)->group(fun
 Route::controller(RestaurantController::class)->group(function () {
     Route::post('/register_restaurant', 'restaurant_create');
     Route::post('/login_restaurant', 'login_restaurant');
-  
     Route::get('/restaurant_week_timings', 'restaurant_week_timings');
+    Route::post('/restaurant_forgot_password', 'forgot_password');
+    Route::post('/restaurant_otp_verified', 'otp_verified');
+    Route::post('/restaurant_change_password', 'change_password');
+    Route::get('/restaurant_cookie', 'cookies_get');
+    Route::get('/restaurant_get_otp_email', 'get_otp_email');
     
 });
 

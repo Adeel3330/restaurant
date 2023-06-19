@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\otps;
+use App\Models\Orders;
+use App\Models\OrderItems;
+use App\Models\DriverOrder;
 use App\Models\Restaurants;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\UsersAdditionals;
 use App\Models\RestaurantsTimings;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class RestaurantController extends Controller
 {
@@ -18,7 +24,7 @@ class RestaurantController extends Controller
     public function restaurant_create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', Rule::unique('restaurants')->where('status', 'Active')],
+            'name' => ['required', Rule::unique('restaurants')],
             'image' => ['required', Rule::imageFile()],
             'longitude' => 'required',
             'latitude' => 'required',
@@ -319,6 +325,192 @@ class RestaurantController extends Controller
             return response()->json([
                 'message' => "Email not exists"
             ], 302);
+        }
+    }
+
+
+    public function forgot_password(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'email'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        } else {
+            if (Restaurants::where('email', $request->email)->count() > 0) {
+                return $this->basic_email($request->email, "OTP send successfully");
+            } else {
+                return response()->json([
+                    "message" => "Email not exists"
+                ], 302);
+            }
+        }
+    }
+
+
+
+    public function basic_email($emails, $messages)
+    {
+        $otp = rand(1000, 9999);
+        $uname = Restaurants::where('email', $emails)->where('status', 'Active')->first();
+        $name = $uname['name'];
+        $data = array('otp' => $otp, 'name' => $name);
+        $email = Mail::send('mail', $data, function ($message) use ($emails) {
+            $message->to($emails, config('app.name'))->subject('OTP Message');
+            $message->from('testuser1447@gmail.com', config('app.name'));
+        });
+        if ($email) {
+            $otp_update = otps::where('email', $emails)->update(['verified' => 'Yes']);
+            $otp_create = otps::create(['email' => $emails, 'verified' => 'No', 'otp' => $otp]);
+            Session::put('otp_email', $emails);
+            return response()->json([
+                "message" => $messages
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "Something Went Wrong send mail"
+            ], 302);
+        }
+    }
+
+
+
+
+    public function otp_verified(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'otp' => ['required']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        } else {
+            $otp_email = Session::get('otp_email');
+            $otp_verified = otps::where('otp', $request->otp)->where('email', $otp_email)->where('verified', 'No')->count();
+            if ($otp_verified > 0) {
+                return response()->json([
+                    "message" => "Otp verified"
+                ], 200);
+            } else {
+                return response()->json([
+                    "message" => "Otp not verified try again!"
+                ], 302);
+            }
+        }
+    }
+
+    public function change_password(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => ['required', Password::min(6)->numbers()->mixedCase()],
+            'confirm_password' => ['required', 'same:password', Password::min(6)->numbers()->mixedCase()],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        } else {
+            $email = Session::get('otp_email');
+            $user = Restaurants::where('email', $email)->where('status', 'Active')->first();
+            // dd(Users::where('email', $email)->where('status', 'Active')->first());
+            if (Hash::check($request->password, $user['password'])) {
+                return response()->json([
+                    "message" => "You cannot use your old password"
+                ], 302);
+            } else {
+                // dd(Hash::make($request->password));
+                $user_update = $user->update(['password' => Hash::make($request->password)]);
+                if ($user_update) {
+                    return response()->json([
+                        "message" => "Your password was updated"
+                    ], 200);
+                } else {
+                    return response()->json([
+                        "message" => "Something went wrong"
+                    ], 302);
+                }
+            }
+        }
+    }
+
+    public function cookies_get()
+    {
+        return response()->json($_COOKIE, 200);
+    }
+
+    public function get_otp_email()
+    {
+        $arr['email'] = Session::get('otp_email');
+        $arr['token'] = Session::get('session.token');
+        return response()->json($arr, 200);
+    }
+
+    public function orders($id = null)
+    {
+        $sid = session()->get('restaurant_id');
+        if (!$id) {
+            $order = Orders::where('status', 'Accepting order')->orWhere('status', 'Preparing your meal');
+            if ($order->count() > 0) {
+                $orders = $order->where('restaurant_id',$sid)->with('user')->get();
+                foreach ($orders as $order) {
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order['orders_items'] = $order_items;
+                }
+                return response()->json($orders, 200);
+            } else {
+                return response()->json([
+                    "message" => "No Order found"
+                ], 302);
+            }
+        } else {
+            $order = Orders::where('status', 'Ready for collection')->where('id', $id);
+            if ($order->count() > 0) {
+                $orders = $order->with('user')->get();
+                foreach ($orders as $order) {
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order['orders_items'] = $order_items;
+                }
+                return response()->json($orders, 200);
+            } else {
+                return response()->json([
+                    "message" => "No Order found"
+                ], 302);
+            }
+        }
+    }
+
+    public function order_update_status($id,Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required',
+            'driver_id'=>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        }
+        if (!$id) {
+            return response()->json([
+                "message" => "Please Enter Id of Order for update",
+            ], 302);
+        }
+        $order = Orders::where('id', $id)->update([
+            'status' => $request->status,
+        ]);
+        if ($order) {
+            if ($request->status == 'Ready for collection' || $request->status == 'Waiting for driver to collect') {
+                DriverOrder::create([
+                    'driver_id' => $request->driver_id,
+                    'order_id' => $id,
+                ]);
+            }
+            return response()->json([
+                "message" => "Order " . $request->status . " updated successfully",
+            ], 200);
+        } else {
+            return response()->json([
+                "message" => "Something Went wrong",
+            ], 200);
         }
     }
 }

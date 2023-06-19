@@ -19,14 +19,14 @@ class RestaurantControllerWeb extends Controller
     public function restaurant_create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', Rule::unique('restaurants')->where('status', 'Active')],
+            'name' => ['required', Rule::unique('restaurants')],
             'image' => ['required', Rule::imageFile()],
             'longitude' => 'required',
             'latitude' => 'required',
             'address' => 'required',
             'phone_no' => 'required',
             'week_ids' => 'required',
-            'email' => ['required', 'email', Rule::unique('restaurants')->where('status', 'Active')],
+            'email' => ['required', 'email', Rule::unique('restaurants')],
             'password' => 'required'
         ]);
 
@@ -128,7 +128,7 @@ class RestaurantControllerWeb extends Controller
                     'address' => 'required',
                     'phone_no' => 'required',
                     'week_ids' => 'required',
-                    'email' => 'required',
+                    'email' => ['required', Rule::unique('restaurants')->where('id','!=',$id)],
                     'password' => 'required',
                 ]);
             } else {
@@ -139,7 +139,7 @@ class RestaurantControllerWeb extends Controller
                     'address' => 'required',
                     'phone_no' => 'required',
                     'week_ids' => 'required',
-                    'email' => 'required',
+                    'email' => ['required', Rule::unique('restaurants')->where('id', '!=', $id)],
                     'password' => 'required',
                 ]);
             }
