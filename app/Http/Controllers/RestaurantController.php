@@ -308,7 +308,7 @@ class RestaurantController extends Controller
             if ($check->count() == 0) {
                 if ($user['status'] != 'Active') {
                     return response()->json([
-                        'message' => 'Your information cannot be approved by Admin'
+                        'message' => 'Account Verification Pending'
                     ], 302);
                 }
                 Session::put('restaurant_id', $user['id']);
@@ -353,7 +353,13 @@ class RestaurantController extends Controller
     public function basic_email($emails, $messages)
     {
         $otp = rand(1000, 9999);
-        $uname = Restaurants::where('email', $emails)->where('status', 'Active')->first();
+        $uname = Restaurants::where('email', $emails)->where('status', 'Active');
+        if ($uname->count() <= 0) {
+            return response()->json([
+                'message' => 'Account Verification Pending'
+            ], 302);
+        }
+        $uname = $uname->first();
         $name = $uname['name'];
         $data = array('otp' => $otp, 'name' => $name);
         $email = Mail::send('mail', $data, function ($message) use ($emails) {
