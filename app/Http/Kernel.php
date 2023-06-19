@@ -67,6 +67,8 @@ class Kernel extends HttpKernel
         'LoginApi' => \App\Http\Middleware\LoginApi::class,
         'AdminLoginApi'=> \App\Http\Middleware\AdminLoginApi::class,
         'AdminWebLogin' => \App\Http\Middleware\AdminWebLogin::class,
+        'DriverLogin' => \App\Http\Middleware\DriverLogin::class,
+        'RestaurantLogin' => \App\Http\Middleware\RestaurantLogin::class,
 
     ];
 }
