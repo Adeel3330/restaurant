@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Models\RestaurantsTimings;
 use App\Models\RestaurantTimeItems;
 use App\Models\UsersAdditionals;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class RestaurantControllerWeb extends Controller
@@ -22,9 +23,11 @@ class RestaurantControllerWeb extends Controller
             'image' => ['required', Rule::imageFile()],
             'longitude' => 'required',
             'latitude' => 'required',
-            'address'=>'required',
-            'phone_no'=>'required',
-            'week_ids'=>'required'
+            'address' => 'required',
+            'phone_no' => 'required',
+            'week_ids' => 'required',
+            'email' => ['required', 'email', Rule::unique('restaurants')->where('status', 'Active')],
+            'password' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -43,14 +46,16 @@ class RestaurantControllerWeb extends Controller
                     $category->latitude = $request->latitude;
                     $category->address = $request->address;
                     $category->phone_no = $request->phone_no;
+                    $category->email = $request->email;
+                    $category->password = Hash::make($request->password);
                     $category->status = "Active";
                     if ($category->save()) {
-                        $id = Restaurants::where('status','Active')->orderBy('id','desc')->first()['id'];
+                        $id = Restaurants::where('status', 'Active')->orderBy('id', 'desc')->first()['id'];
                         // dd($request->week_ids);
-                        foreach($request->week_ids as $week){
+                        foreach ($request->week_ids as $week) {
                             $items = RestaurantTimeItems::create([
-                                'restaurant_id'=>$id,
-                                'restaurant_timings_id'=>$week
+                                'restaurant_id' => $id,
+                                'restaurant_timings_id' => $week
                             ]);
                         }
                         return response()->json([
@@ -82,7 +87,7 @@ class RestaurantControllerWeb extends Controller
                 'status' => 'delete',
             ]);
             if ($category) {
-                $delete = RestaurantTimeItems::where('restaurant_id',$id)->delete();
+                $delete = RestaurantTimeItems::where('restaurant_id', $id)->delete();
 
                 return response()->json([
                     "message" => "Restaurant deleted successfully"
@@ -101,11 +106,10 @@ class RestaurantControllerWeb extends Controller
     public function restaurants($id = null)
     {
         if (!$id) {
-            $restaurants = Restaurants::where('status', 'Active')->get();
-            return view('/admin/restaurants',compact('restaurants'));
-            
+            $restaurants = Restaurants::where('status', '!=', 'delete')->get();
+            return view('/admin/restaurants', compact('restaurants'));
         } else {
-            $restaurants = Restaurants::where('status', 'Active')->where('id', $id)->get();
+            $restaurants = Restaurants::where('status', '!=', 'delete')->where('id', $id)->get();
             return view('/admin/restaurants', compact('restaurants'));
         }
     }
@@ -123,16 +127,20 @@ class RestaurantControllerWeb extends Controller
                     'latitude' => ['required'],
                     'address' => 'required',
                     'phone_no' => 'required',
-                    'week_ids' => 'required'
+                    'week_ids' => 'required',
+                    'email' => 'required',
+                    'password' => 'required',
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
                     'name' => ['required'],
                     'longitude' => ['required'],
                     'latitude' => ['required'],
-                    'address'=>'required',
-                    'phone_no'=>'required',
-                    'week_ids'=>'required'
+                    'address' => 'required',
+                    'phone_no' => 'required',
+                    'week_ids' => 'required',
+                    'email' => 'required',
+                    'password' => 'required',
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -157,10 +165,12 @@ class RestaurantControllerWeb extends Controller
                             'image' => $_FILES['image']['name'],
                             'longitude' => $request->longitude,
                             'latitude' => $request->latitude,
+                            'email' => $request->email,
+                            'password' => Hash::make($request->password),
                         ]);
                         if ($category) {
-                            RestaurantTimeItems::where('restaurant_id',$id)->delete();
-                            foreach($request->week_ids as $week){
+                            RestaurantTimeItems::where('restaurant_id', $id)->delete();
+                            foreach ($request->week_ids as $week) {
                                 $items = RestaurantTimeItems::create([
                                     'restaurant_id' => $id,
                                     'restaurant_timings_id' => $week
@@ -184,6 +194,8 @@ class RestaurantControllerWeb extends Controller
                         'name' => $request->name,
                         'longitude' => $request->longitude,
                         'latitude' => $request->latitude,
+                        'email' => $request->email,
+                        'password' => Hash::make($request->password),
                     ]);
                     if ($category) {
                         RestaurantTimeItems::where('restaurant_id', $id)->delete();
@@ -265,16 +277,47 @@ class RestaurantControllerWeb extends Controller
         }
     }
 
-    public function restaurant_edit($id){
-        $restaurant  = Restaurants::where('id',$id)->with('week_ids')->where('status','Active')->first();
+    public function restaurant_edit($id)
+    {
+        $restaurant  = Restaurants::where('id', $id)->with('week_ids')->where('status', 'Active')->first();
         $weeks = RestaurantsTimings::all();
 
-        return view('admin.restaurant-edit',compact('restaurant','weeks'));
-
+        return view('admin.restaurant-edit', compact('restaurant', 'weeks'));
     }
 
-    public function restaurant_create_view(){
+    public function restaurant_create_view()
+    {
         $weeks = RestaurantsTimings::all();
-        return view('/admin/restaurant-create',compact('weeks'));
+        return view('/admin/restaurant-create', compact('weeks'));
+    }
+
+
+    public function update_restaurant_status($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        }
+        if (Restaurants::where('id', $id)->where('status', 'Pending')->count() > 0) {
+            $driver = Restaurants::where('id', $id)->update([
+                'status' => $request->status,
+            ]);
+            if ($driver) {
+                return response()->json([
+                    "message" => "Driver " . $request->status . " successfully"
+                ], 200);
+            } else {
+                return response()->json([
+                    "message" => "Something went wrong!"
+                ], 302);
+            }
+        } else {
+            return response()->json([
+                "message" => "Driver not found or already deleted"
+            ], 302);
+        }
     }
 }

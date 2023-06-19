@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Restaurants;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\UsersAdditionals;
+use App\Models\RestaurantsTimings;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\UserController;
-use App\Models\UsersAdditionals;
 use Illuminate\Support\Facades\Validator;
 
 class RestaurantController extends Controller
@@ -22,7 +24,9 @@ class RestaurantController extends Controller
             'latitude' => 'required',
             'address' => 'required',
             'phone_no' => 'required',
-            'week_ids' => 'required'
+            'week_ids' => 'required',
+            'email'=>['required','email', Rule::unique('restaurants')->where('status', 'Active')],
+            'password'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -41,8 +45,9 @@ class RestaurantController extends Controller
                     $category->latitude = $request->latitude;
                     $category->address = $request->address;
                     $category->phone_no = $request->phone_no;
-                    // $category->week_id = $request->week_id;
-                    $category->status = "Active";
+                    $category->email = $request->email;
+                    $category->password = Hash::make($request->password);
+                    $category->status = "Pending";
                     if ($category->save()) {
                         return response()->json([
                             "message" => "Restaurant created successfully"
@@ -90,7 +95,7 @@ class RestaurantController extends Controller
     public function restaurants($id = null)
     {
         if (!$id) {
-            $category = Restaurants::where('status', 'Active');
+            $category = Restaurants::where('status', '!=','delete');
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -103,7 +108,7 @@ class RestaurantController extends Controller
                 ], 302);
             }
         } else {
-            $category = Restaurants::where('status', 'Active')->where('id', $id);
+            $category = Restaurants::where('status','!=', 'delete')->where('id', $id);
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -259,6 +264,61 @@ class RestaurantController extends Controller
             } else {
                 return $miles;
             }
+        }
+    }
+
+    public function restaurant_week_timings()
+    {
+        $weeks = RestaurantsTimings::all();
+        if($weeks->count() > 0){
+            return response()->json($weeks, 200);
+        }
+        else{
+            return response()->json([
+                'message'=>'No timing Found'
+            ], 302);
+        }
+      
+
+    }
+
+    public function login_restaurant(Request $request){
+        $v = Validator::make($request->all(), array(
+            'email' => 'required|email',
+            'password' => 'required',
+        ));
+        if ($v->fails()) {
+            return response()->json([
+                $v->errors()
+            ], 302);
+        }
+
+        // dd($request);
+        $user = Restaurants::where('email', $request->email);
+        if ($user->count() > 0) {
+            $user = $user->first();
+            $password = $user['password'];
+            $check = $user::where('password', Hash::check($request->password, $password));
+            if ($check->count() == 0) {
+                if ($user['status'] != 'Active') {
+                    return response()->json([
+                        'message' => 'Your information cannot be approved by Admin'
+                    ], 302);
+                }
+                Session::put('restaurant_id', $user['id']);
+                Session::put('name', $user['name']);
+                return response()->json([
+                    "message" => "Login Successfully"
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => "Password not verify try again !"
+                ], 302);
+            }
+        } else {
+            return response()->json([
+                'message' => "Email not exists"
+            ], 302);
         }
     }
 }

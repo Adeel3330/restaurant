@@ -123,6 +123,7 @@ Route::middleware('AdminWebLogin')->controller(RestaurantControllerWeb::class)->
     Route::post('/admin/edit_restaurant/{id}', 'edit_restaurant');
     Route::get('/admin/delete_restaurant/{id}', 'delete_restaurant');
     Route::get('/admin/restaurant-edit/{id}','restaurant_edit');
+    Route::post('/admin/update_restaurant_status/{id}', 'update_restaurant_status');
 });
 
 

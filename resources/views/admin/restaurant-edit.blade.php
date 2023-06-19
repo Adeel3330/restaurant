@@ -23,13 +23,28 @@
                                     </div>
                                 </div>
                                 <!--/span-->
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Email</label>
+                                        <input type="email" id="lastName" value="{{ $restaurant->email }}" name="email" class="form-control" placeholder="Please enter email" required>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Password</label>
+                                        <input type="password" id="password" name="password" class="form-control" placeholder="*********" required>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Logntitude</label>
                                         <input type="text" id="lastName" name="longitude" value="{{ $restaurant->longitude }}" class="form-control" placeholder="Please enter longitude" required>
                                     </div>
                                 </div>
-                                <!--/span-->
                             </div>
                             <!-- Row -->
                             <div class="row">

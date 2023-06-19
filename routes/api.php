@@ -15,6 +15,7 @@ use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\RestaurantTimingController;
+use App\Models\Restaurants;
 
 /*
 |--------------------------------------------------------------------------
@@ -168,10 +169,42 @@ Route::middleware('LoginApi')->controller(RestaurantController::class)->group(fu
 Route::controller(DriverController::class)->group(function () {
     Route::post('/register_driver', 'register_driver');
     Route::post('/login_driver', 'login_driver');
+    Route::get('/restaurants_driver', 'restaurants_driver');
+    Route::post('/driver_forgot_password', 'forgot_password');
+    Route::post('/driver_otp_verified', 'otp_verified');
+    Route::post('/driver_change_password', 'change_password');
+    Route::get('/driver_cookie', 'cookies_get');
+    Route::get('/driver_get_otp_email', 'get_otp_email');
+   
+
+});
+
+Route::middleware('DriverLogin')->controller(DriverController::class)->group(function () {
     Route::get('/driver/orders', 'orders');
     Route::get('/driver/orders/{id}', 'orders');
     Route::post('/driver/order_update_status/{id}', 'order_update_status');
-
+    Route::post('/driver/insert_location', 'insert_location');
+    
 });
+
+
+
+
+Route::controller(RestaurantController::class)->group(function () {
+    Route::post('/register_restaurant', 'restaurant_create');
+    Route::post('/login_restaurant', 'login_restaurant');
+  
+    Route::get('/restaurant_week_timings', 'restaurant_week_timings');
+    
+});
+
+Route::middleware('RestaurantLogin')->controller(RestaurantController::class)->group(function () {
+
+    Route::get('/restaurant/orders', 'orders');
+    Route::get('/restaurant/orders/{id}', 'orders');
+    Route::post('/restaurant/order_update_status/{id}', 'order_update_status');
+});
+
+
 
 

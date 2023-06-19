@@ -86,7 +86,7 @@ class DriverControllerWeb extends Controller
     }
 
 
-    public function update_driver_status($id = null,Request $request)
+    public function update_driver_status($id,Request $request)
     {
         $validator = Validator::make($request->all(), [
             'status' => ['required'],
