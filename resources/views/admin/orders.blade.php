@@ -52,14 +52,7 @@
                                         <td>{{ $order->transaction_id }}</td>
                                         <td><span class='{{ $order->status != "Delivered" ? "label label-primary font-weight-100":"label label-success font-weight-100" }}'>{{ $order->status }}</span></td>
                                         <td><a href="/admin/order-detail/{{ $order->id }}" class="text-inverse" title="" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>
-                                            @if($order->status == 'Accepting order')
-
-                                            <a href="javascript:void(0)" onclick="UpdateStatus('<?php echo $order->id ?>','/admin/order_update','Order','Preparing your meal')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Change status to Preparing your meal"><i class="fa fa-check"></i></a>
-
-                                            @elseif ($order->status == 'Preparing your meal')
-                                            <a href="javascript:void(0)" onclick="UpdateStatus('<?php echo $order->id ?>','/admin/order_update','Order','Ready for collection')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Change status to Ready for collection"><i class="fa fa-check"></i></a>
-
-                                            @endif
+                                           
                                         </td>
                                     </tr>
 
