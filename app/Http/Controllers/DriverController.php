@@ -160,12 +160,6 @@ class DriverController extends Controller
             'status' => $request->status,
         ]);
         if ($order) {
-            if($request->status == 'Collected' || $request->status == 'Driver on their way'){
-                // DriverOrder::create([
-                //     'driver_id'=>session()->get('id'),
-                //     'order_id'=>$id,
-                // ]);
-            }
             return response()->json([
                 "message" => "Order " . $request->status . " updated successfully",
             ], 200);
@@ -308,8 +302,7 @@ class DriverController extends Controller
 
     public function get_otp_email()
     {
-        $arr['email'] = Session::get('otp_email');
-        $arr['token'] = Session::get('session.token');
+        $arr = Session::all();
         return response()->json($arr, 200);
     }
 

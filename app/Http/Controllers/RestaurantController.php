@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\UserController;
+use App\Models\Driver;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
@@ -446,8 +447,7 @@ class RestaurantController extends Controller
 
     public function get_otp_email()
     {
-        $arr['email'] = Session::get('otp_email');
-        $arr['token'] = Session::get('session.token');
+        $arr = Session::all();
         return response()->json($arr, 200);
     }
 
@@ -518,5 +518,13 @@ class RestaurantController extends Controller
                 "message" => "Something Went wrong",
             ], 200);
         }
+    }
+
+    public function get_drivers(){
+        $drivers = Driver::where('status','Active');
+        if($drivers->count() > 0){
+            return response()->json($drivers->get(),200);
+        }
+        return response()->json(['message'=>'No driver found'],200);
     }
 }

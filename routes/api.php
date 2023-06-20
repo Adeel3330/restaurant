@@ -203,7 +203,7 @@ Route::controller(RestaurantController::class)->group(function () {
 });
 
 Route::middleware('RestaurantLogin')->controller(RestaurantController::class)->group(function () {
-
+    Route::get('/restaurant/drivers','get_drivers');
     Route::get('/restaurant/orders', 'orders');
     Route::get('/restaurant/orders/{id}', 'orders');
     Route::post('/restaurant/order_update_status/{id}', 'order_update_status');
