@@ -504,11 +504,15 @@ class RestaurantController extends Controller
             'status' => $request->status,
         ]);
         if ($order) {
-            if ($request->status == 'Ready for collection' || $request->status == 'Waiting for driver to collect') {
+            if (DriverOrder::where('order_id',$id)->where('driver_id',$request->driver_id)->count() <= 0) {
                 DriverOrder::create([
                     'driver_id' => $request->driver_id,
                     'order_id' => $id,
                 ]);
+            }else{
+                return response()->json([
+                    "message" => "Order already exists against driver",
+                ], 200);
             }
             return response()->json([
                 "message" => "Order " . $request->status . " updated successfully",

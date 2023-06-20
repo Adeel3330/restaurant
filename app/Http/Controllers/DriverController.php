@@ -111,11 +111,10 @@ class DriverController extends Controller
     {
         if (!$id) {
             $order = DriverOrder::where('driver_id',session()->get('driver_id'));
-            // $order = Orders::where('status','Ready for collection');
             if ($order->count() > 0) {
                 $orders = $order->with('order')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order->order_id)->with('product')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
