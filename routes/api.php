@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Driver;
+use App\Models\Restaurants;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Homecontroller;
@@ -14,8 +15,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\RestaurantOwnerController;
 use App\Http\Controllers\RestaurantTimingController;
-use App\Models\Restaurants;
 
 /*
 |--------------------------------------------------------------------------
@@ -190,17 +191,23 @@ Route::middleware('DriverLogin')->controller(DriverController::class)->group(fun
 
 
 
-Route::controller(RestaurantController::class)->group(function () {
+Route::controller(RestaurantOwnerController::class)->group(function () {
     Route::post('/register_restaurant', 'restaurant_create');
     Route::post('/login_restaurant', 'login_restaurant');
-    Route::get('/restaurant_week_timings', 'restaurant_week_timings');
     Route::post('/restaurant_forgot_password', 'forgot_password');
     Route::post('/restaurant_otp_verified', 'otp_verified');
     Route::post('/restaurant_change_password', 'change_password');
     Route::get('/restaurant_cookie', 'cookies_get');
     Route::get('/restaurant_get_otp_email', 'get_otp_email');
+    Route::get('/restaurants', 'restaurants');
     
 });
+
+
+Route::controller(RestaurantController::class)->group(function () {
+    Route::get('/restaurant_week_timings', 'restaurant_week_timings');
+});
+    
 
 Route::middleware('RestaurantLogin')->controller(RestaurantController::class)->group(function () {
     Route::get('/restaurant/drivers','get_drivers');

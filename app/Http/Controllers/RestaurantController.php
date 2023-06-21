@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\otps;
 use App\Models\Orders;
 use App\Models\OrderItems;
 use App\Models\DriverOrder;
@@ -11,13 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\UsersAdditionals;
 use App\Models\RestaurantsTimings;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\UserController;
 use App\Models\Driver;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 
 class RestaurantController extends Controller
 {
@@ -32,8 +27,7 @@ class RestaurantController extends Controller
             'address' => 'required',
             'phone_no' => 'required',
             'week_ids' => 'required',
-            'email'=>['required','email', Rule::unique('restaurants')->where('status', 'Active')],
-            'password'=>'required'
+         
         ]);
 
         if ($validator->fails()) {
@@ -52,8 +46,6 @@ class RestaurantController extends Controller
                     $category->latitude = $request->latitude;
                     $category->address = $request->address;
                     $category->phone_no = $request->phone_no;
-                    $category->email = $request->email;
-                    $category->password = Hash::make($request->password);
                     $category->status = "Pending";
                     if ($category->save()) {
                         return response()->json([
@@ -289,167 +281,6 @@ class RestaurantController extends Controller
 
     }
 
-    public function login_restaurant(Request $request){
-        $v = Validator::make($request->all(), array(
-            'email' => 'required|email',
-            'password' => 'required',
-        ));
-        if ($v->fails()) {
-            return response()->json([
-                $v->errors()
-            ], 302);
-        }
-
-        // dd($request);
-        $user = Restaurants::where('email', $request->email);
-        if ($user->count() > 0) {
-            $user = $user->first();
-            $password = $user['password'];
-            $check = $user::where('password', Hash::check($request->password, $password));
-            if ($check->count() == 0) {
-                if ($user['status'] != 'Active') {
-                    return response()->json([
-                        'message' => 'Account Verification Pending'
-                    ], 302);
-                }
-                Session::put('restaurant_id', $user['id']);
-                Session::put('name', $user['name']);
-                return response()->json([
-                    "message" => "Login Successfully"
-                ], 200);
-            } else {
-                return response()->json([
-                    'message' => "Password not verify try again !"
-                ], 302);
-            }
-        } else {
-            return response()->json([
-                'message' => "Email not exists"
-            ], 302);
-        }
-    }
-
-
-    public function forgot_password(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 302);
-        } else {
-            if (Restaurants::where('email', $request->email)->count() > 0) {
-                return $this->basic_email($request->email, "OTP send successfully");
-            } else {
-                return response()->json([
-                    "message" => "Email not exists"
-                ], 302);
-            }
-        }
-    }
-
-
-
-    public function basic_email($emails, $messages)
-    {
-        $otp = rand(1000, 9999);
-        $uname = Restaurants::where('email', $emails)->where('status', 'Active');
-        if ($uname->count() <= 0) {
-            return response()->json([
-                'message' => 'Account Verification Pending'
-            ], 302);
-        }
-        $uname = $uname->first();
-        $name = $uname['name'];
-        $data = array('otp' => $otp, 'name' => $name);
-        $email = Mail::send('mail', $data, function ($message) use ($emails) {
-            $message->to($emails, config('app.name'))->subject('OTP Message');
-            $message->from('testuser1447@gmail.com', config('app.name'));
-        });
-        if ($email) {
-            $otp_update = otps::where('email', $emails)->update(['verified' => 'Yes']);
-            $otp_create = otps::create(['email' => $emails, 'verified' => 'No', 'otp' => $otp]);
-            Session::put('otp_email', $emails);
-            return response()->json([
-                "message" => $messages
-            ], 200);
-        } else {
-            return response()->json([
-                "message" => "Something Went Wrong send mail"
-            ], 302);
-        }
-    }
-
-
-
-
-    public function otp_verified(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'otp' => ['required']
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 302);
-        } else {
-            $otp_email = Session::get('otp_email');
-            $otp_verified = otps::where('otp', $request->otp)->where('email', $otp_email)->where('verified', 'No')->count();
-            if ($otp_verified > 0) {
-                return response()->json([
-                    "message" => "Otp verified"
-                ], 200);
-            } else {
-                return response()->json([
-                    "message" => "Otp not verified try again!"
-                ], 302);
-            }
-        }
-    }
-
-    public function change_password(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'password' => ['required', Password::min(6)->numbers()->mixedCase()],
-            'confirm_password' => ['required', 'same:password', Password::min(6)->numbers()->mixedCase()],
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 302);
-        } else {
-            $email = Session::get('otp_email');
-            $user = Restaurants::where('email', $email)->where('status', 'Active')->first();
-            // dd(Users::where('email', $email)->where('status', 'Active')->first());
-            if (Hash::check($request->password, $user['password'])) {
-                return response()->json([
-                    "message" => "You cannot use your old password"
-                ], 302);
-            } else {
-                // dd(Hash::make($request->password));
-                $user_update = $user->update(['password' => Hash::make($request->password)]);
-                if ($user_update) {
-                    return response()->json([
-                        "message" => "Your password was updated"
-                    ], 200);
-                } else {
-                    return response()->json([
-                        "message" => "Something went wrong"
-                    ], 302);
-                }
-            }
-        }
-    }
-
-    public function cookies_get()
-    {
-        return response()->json($_COOKIE, 200);
-    }
-
-    public function get_otp_email()
-    {
-        $arr = Session::all();
-        return response()->json($arr, 200);
-    }
 
     public function orders($id = null)
     {

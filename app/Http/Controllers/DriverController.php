@@ -112,8 +112,9 @@ class DriverController extends Controller
         if (!$id) {
             $order = DriverOrder::where('driver_id',session()->get('driver_id'));
             if ($order->count() > 0) {
-                $orders = $order->with('order')->get();
+                $orders = $order->with('order','order.user,order.user.user_address')->get();
                 foreach ($orders as $order) {
+                    $order = $order->with('user');
                     $order_items = OrderItems::where('order_id', $order->order_id)->with('product')->get();
                     $order['orders_items'] = $order_items;
                 }

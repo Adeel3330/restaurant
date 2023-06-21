@@ -14,4 +14,9 @@ class Users extends Model
         'email',
         'password',
     ];
+
+    public function user_address()
+    {
+        return $this->belongsTo(UsersAdditionals::class, 'id', 'user_id');
+    }
 }
