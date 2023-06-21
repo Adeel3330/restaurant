@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductControllerWeb;
 use App\Http\Controllers\CategoryControllerWeb;
 use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\RestaurantControllerWeb;
+use App\Http\Controllers\RestaurantOwnerControllerWeb;
 use App\Http\Controllers\SubcategoryControllerWeb;
 use App\Http\Controllers\RestaurantTimingController;
 
@@ -149,6 +150,19 @@ Route::middleware('AdminWebLogin')->controller(DriverControllerWeb::class)->grou
     Route::get('/admin/drivers/{id}', 'drivers');
     Route::get('/admin/driver-create', 'driver_create_view');
     Route::post('/admin/update_driver_status/{id}', 'update_driver_status');
+});
+
+
+Route::middleware('AdminWebLogin')->controller(RestaurantOwnerControllerWeb::class)->group(function () {
+    Route::post('/admin/owner_create', 'owner_create');
+    Route::get('/admin/delete_owner', 'delete_owner');
+    Route::get('/admin/delete_owner/{id}', 'delete_owner');
+    Route::post('/admin/edit_owner/{id}', 'edit_owner');
+    Route::get('/admin/owner-edit/{id}', 'edit_owner_view');
+    Route::get('/admin/owners', 'owners');
+    Route::get('/admin/owners/{id}', 'owners');
+    Route::get('/admin/owner-create', 'owner_create_view');
+    Route::post('/admin/update_owner_status/{id}', 'update_owner_status');
 });
 
 

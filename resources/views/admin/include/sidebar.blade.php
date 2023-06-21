@@ -150,10 +150,21 @@
                     <a href="javascript:void(0);" data-toggle="collapse" data-target="#driver_dr"><i class="fa fa-users mr-10"></i>Drivers<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="driver_dr" class="collapse collapse-level-1">
                         <li>
-                            <a href="/admin/drivers">Driver</a>
+                            <a href="/admin/drivers">Drivers</a>
                         </li>
                         <li>
                             <a href="/admin/driver-create">Driver Create</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#owner_dr"><i class="fa fa-users mr-10"></i>Owner<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <ul id="owner_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="/admin/owners">Owners</a>
+                        </li>
+                        <li>
+                            <a href="/admin/owner-create">Owner Create</a>
                         </li>
                     </ul>
                 </li>

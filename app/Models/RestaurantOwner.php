@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class RestaurantOwner extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+    public function restaurant(){
+        return $this->belongsTo(Restaurants::class,);
+    }
+
 }
