@@ -26,8 +26,6 @@ class RestaurantControllerWeb extends Controller
             'address' => 'required',
             'phone_no' => 'required',
             'week_ids' => 'required',
-            'email' => ['required', 'email', Rule::unique('restaurants')],
-            'password' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -46,8 +44,6 @@ class RestaurantControllerWeb extends Controller
                     $category->latitude = $request->latitude;
                     $category->address = $request->address;
                     $category->phone_no = $request->phone_no;
-                    $category->email = $request->email;
-                    $category->password = Hash::make($request->password);
                     $category->status = "Active";
                     if ($category->save()) {
                         $id = Restaurants::where('status', 'Active')->orderBy('id', 'desc')->first()['id'];
@@ -128,8 +124,6 @@ class RestaurantControllerWeb extends Controller
                     'address' => 'required',
                     'phone_no' => 'required',
                     'week_ids' => 'required',
-                    'email' => ['required', Rule::unique('restaurants')->where('id','!=',$id)],
-                    'password' => 'required',
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
@@ -139,8 +133,6 @@ class RestaurantControllerWeb extends Controller
                     'address' => 'required',
                     'phone_no' => 'required',
                     'week_ids' => 'required',
-                    'email' => ['required', Rule::unique('restaurants')->where('id', '!=', $id)],
-                    'password' => 'required',
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -165,8 +157,6 @@ class RestaurantControllerWeb extends Controller
                             'image' => $_FILES['image']['name'],
                             'longitude' => $request->longitude,
                             'latitude' => $request->latitude,
-                            'email' => $request->email,
-                            'password' => Hash::make($request->password),
                         ]);
                         if ($category) {
                             RestaurantTimeItems::where('restaurant_id', $id)->delete();
@@ -194,8 +184,6 @@ class RestaurantControllerWeb extends Controller
                         'name' => $request->name,
                         'longitude' => $request->longitude,
                         'latitude' => $request->latitude,
-                        'email' => $request->email,
-                        'password' => Hash::make($request->password),
                     ]);
                     if ($category) {
                         RestaurantTimeItems::where('restaurant_id', $id)->delete();
