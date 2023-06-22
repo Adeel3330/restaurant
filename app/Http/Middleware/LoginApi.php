@@ -23,7 +23,7 @@ class LoginApi
         {
             return response()->json([
                 "message"=>"Please login first"
-            ],302);
+            ],420);
         }
         
     }

@@ -20,7 +20,7 @@ class DriverLogin
         } else {
             return response()->json([
                 "message" => "Please Driver login first"
-            ], 302);
+            ], 420);
         }
         return $next($request);
     }

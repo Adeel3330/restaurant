@@ -20,7 +20,7 @@ class RestaurantLogin
         } else {
             return response()->json([
                 "message" => "Please Restaurant login first"
-            ], 302);
+            ], 420);
         }
         return $next($request);
     }

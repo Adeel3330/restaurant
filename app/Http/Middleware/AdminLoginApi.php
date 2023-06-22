@@ -20,7 +20,7 @@ class AdminLoginApi
         } else {
             return response()->json([
                 "message" => "Please admin login first"
-            ], 302);
+            ], 420);
         }
         return $next($request);
     }
