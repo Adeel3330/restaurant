@@ -23,6 +23,7 @@ class Orders extends Model
         'user_id',
         'transaction_id',
         'restaurant_id',
+        'address',
         'status'
     ];
 }

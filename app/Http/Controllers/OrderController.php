@@ -65,6 +65,7 @@ class OrderController extends Controller
         $validator = Validator::make($request->all(), [
             'transaction_id' => 'required',
             'restaurant_id'=>'required',
+            'address'=>'required',
             'items.*.product_id' => 'required',
             'items.*.payment' => 'required',
             'items.*.quantity' => 'required|numeric',
@@ -112,6 +113,7 @@ class OrderController extends Controller
         $orderscreate->transaction_id = $request->transaction_id;
         $orderscreate->order_no = $order_no;
         $orderscreate->restaurant_id = $request->restaurant_id;
+        $orderscreate->address = $request->address;
         $orderscreate->save();
         foreach ($request->items as $key => $item) {
             $order = Orders::where('user_id', $sid)->where('status', 'Accepting order')->orderBy('created_at', 'desc')->first();
