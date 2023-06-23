@@ -214,6 +214,8 @@ Route::middleware('RestaurantLogin')->controller(RestaurantController::class)->g
     Route::get('/restaurant/orders', 'orders');
     Route::get('/restaurant/orders/{id}', 'orders');
     Route::post('/restaurant/order_update_status/{id}', 'order_update_status');
+    Route::post('/restaurant/assign_driver', 'assign_driver');
+
 });
 
 

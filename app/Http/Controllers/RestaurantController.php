@@ -320,7 +320,6 @@ class RestaurantController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'status' => 'required',
-            'driver_id'=>'required',
         ]);
 
         if ($validator->fails()) {
@@ -335,16 +334,6 @@ class RestaurantController extends Controller
             'status' => $request->status,
         ]);
         if ($order) {
-            if (DriverOrder::where('order_id',$id)->where('driver_id',$request->driver_id)->count() <= 0) {
-                DriverOrder::create([
-                    'driver_id' => $request->driver_id,
-                    'order_id' => $id,
-                ]);
-            }else{
-                return response()->json([
-                    "message" => "Order already exists against driver",
-                ], 200);
-            }
             return response()->json([
                 "message" => "Order " . $request->status . " updated successfully",
             ], 200);
@@ -361,5 +350,37 @@ class RestaurantController extends Controller
             return response()->json($drivers->get(),200);
         }
         return response()->json(['message'=>'No driver found'],200);
+    }
+
+    public function assign_driver(Request $request){
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+            'driver_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        }
+
+        if (DriverOrder::where('order_id', $request->id)->where('driver_id', $request->driver_id)->count() <= 0) {
+            $driverAssign = DriverOrder::create([
+                'driver_id' => $request->driver_id,
+                'order_id' => $request->order_id,
+            ]);
+            if($driverAssign){
+                return response()->json([
+                    'message' => 'Driver Assign Successfully',
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'message' => 'Something went wrong',
+                ], 302);
+            }
+        } else {
+            return response()->json([
+                'message'=>'Order Already Exists',
+            ],302);
+        }
     }
 }
