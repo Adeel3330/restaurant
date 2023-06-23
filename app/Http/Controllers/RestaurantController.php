@@ -286,7 +286,7 @@ class RestaurantController extends Controller
     {
         $sid = session()->get('restaurant_id');
         if (!$id) {
-            $order = Orders::where('status', 'Accepting order')->orWhere('status', 'Preparing your meal');
+            $order = Orders::where('status', '!=','delete');
             if ($order->count() > 0) {
                 $orders = $order->where('restaurant_id',$sid)->with('user')->get();
                 foreach ($orders as $order) {
@@ -300,7 +300,7 @@ class RestaurantController extends Controller
                 ], 302);
             }
         } else {
-            $order = Orders::where('status', 'Ready for collection')->where('id', $id);
+            $order = Orders::where('status', '!=', 'delete')->where('id', $id);
             if ($order->count() > 0) {
                 $orders = $order->with('user')->get();
                 foreach ($orders as $order) {

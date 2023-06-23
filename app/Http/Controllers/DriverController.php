@@ -110,11 +110,10 @@ class DriverController extends Controller
     public function orders($id = null)
     {
         if (!$id) {
-            $order = DriverOrder::where('driver_id',session()->get('driver_id'));
+            $order = DriverOrder::where('driver_id', session()->get('driver_id'));
             if ($order->count() > 0) {
-                $orders = $order->with('order','order.user,order.user.user_address')->get();
+                $orders = $order->with('order', 'order.user', 'order.user.user_address')->get();
                 foreach ($orders as $order) {
-                    $order = $order->with('user');
                     $order_items = OrderItems::where('order_id', $order->order_id)->with('product')->get();
                     $order['orders_items'] = $order_items;
                 }
@@ -125,7 +124,7 @@ class DriverController extends Controller
                 ], 302);
             }
         } else {
-            $order = DriverOrder::where('driver_id', session()->get('driver_id'))->where('id',$id);
+            $order = DriverOrder::where('driver_id', session()->get('driver_id'))->where('id', $id);
             if ($order->count() > 0) {
                 $orders = $order->with('user')->get();
                 foreach ($orders as $order) {
