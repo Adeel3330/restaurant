@@ -19,7 +19,7 @@ class RestaurantOwnerController extends Controller
     public function restaurant_create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required','email', Rule::unique('restaurants_owner')],
+            'email' => ['required','email', Rule::unique('restaurant_owners')],
             'restaurant_id' => 'required',
             'password' => 'required',
         ]);
