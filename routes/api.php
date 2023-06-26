@@ -44,6 +44,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/cookie', 'cookies_get');
     Route::get('/get_otp_email', 'get_otp_email');
     Route::post('/v3/admin_login', 'AdminLogin');
+
 });
 
 
@@ -59,9 +60,13 @@ Route::middleware('AdminLoginApi')->controller(UserController::class)->group(fun
 
 Route::middleware('LoginApi')->controller(Homecontroller::class)->group(function () {
     Route::post('/location_insert', 'location_insert');
-    Route::post('/get_session', 'get_session');
+
    
 });
+Route::controller(Homecontroller::class)->group(function () {
+    Route::post('/get_session', 'get_session');
+});
+
 
 Route::middleware('LoginApi')->controller(CategoryController::class)->group(function () {
     Route::get('/categories', 'categories');

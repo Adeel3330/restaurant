@@ -65,7 +65,6 @@ class Homecontroller extends Controller
         return response()->json([
             "session"=> $session
         ],200);
-        DB::table('users');
     }
     
 }
