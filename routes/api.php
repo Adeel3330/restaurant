@@ -13,6 +13,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DriverControllerWeb;
+use App\Http\Controllers\FlameController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\RestaurantOwnerController;
@@ -144,6 +145,11 @@ Route::middleware('LoginApi')->controller(OrderController::class)->group(functio
     Route::get('/cart/{id}', 'cart');
 });
 
+Route::middleware('LoginApi')->controller(FlameController::class)->group(function () {
+    Route::get('/flames', 'get_flames');
+    Route::post('/update_flame_status/{id}', 'update_flame_status');
+});
+
 Route::middleware('AdminLoginApi')->controller(OrderController::class)->group(function () {
 
     Route::get('/v3/carts', 'carts');
@@ -192,6 +198,7 @@ Route::middleware('DriverLogin')->controller(DriverController::class)->group(fun
     Route::post('/driver/insert_location', 'insert_location');
     
 });
+
 
 
 

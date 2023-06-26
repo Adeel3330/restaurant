@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Driver;
+use App\Models\Flames;
 use App\Models\Orders;
 use App\Models\OrderItems;
 use App\Models\DriverOrder;
@@ -11,7 +13,6 @@ use Illuminate\Validation\Rule;
 use App\Models\UsersAdditionals;
 use App\Models\RestaurantsTimings;
 use Illuminate\Support\Facades\Session;
-use App\Models\Driver;
 use Illuminate\Support\Facades\Validator;
 
 class RestaurantController extends Controller
@@ -330,10 +331,32 @@ class RestaurantController extends Controller
                 "message" => "Please Enter Id of Order for update",
             ], 302);
         }
+        if (Orders::where('status', $request->status)->where('id', $id)->count() > 0) {
+            return response()->json([
+                'message' => 'Order Already updated'
+            ], 302);
+        }
         $order = Orders::where('id', $id)->update([
             'status' => $request->status,
         ]);
         if ($order) {
+            $uid = Orders::where('id', $id)->pluck('user_id');
+            if ($request->status == 'Collected' || $request->status == 'Delivered') {
+                $flames_qty = OrderItems::where('order_id', $id)->get();
+                $total_flames = $flames_qty->sum('payment');
+                $actual_flames = ($total_flames *  5) / 100;
+                if (Flames::where('user_id', $uid[0])->where('status', 'Active')->count() > 0) {
+                    $sum = Flames::where('user_id', $uid[0])->where('status', 'Active')->pluck('flames');
+                    $real_flames = $sum[0] + $actual_flames;
+                    $flames = Flames::where('user_id', $uid[0])->update(['flames' => $real_flames]);
+                } else {
+                    $flames = Flames::create([
+                        'user_id' => $uid[0],
+                        'flames' => $actual_flames
+                    ]);
+                }
+            }
+       
             return response()->json([
                 "message" => "Order " . $request->status . " updated successfully",
             ], 200);
