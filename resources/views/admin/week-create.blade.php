@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label mb-10">Categories</label>
+                                        <label class="control-label mb-10">Opening Time</label>
                                         <input type="time" class="form-control" name="opening_time" required>
                                     </div>
                                 </div>
@@ -36,7 +36,19 @@
                                         <input type="time" class="form-control" name="closing_time" required>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Restaurants</label>
+                                        <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
+                                            @forelse ($restaurants as $restaurant)
+                                            <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
+                                            @empty
+                                            <option value="">No Restaurant found</option>
+                                            @endforelse
 
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
 

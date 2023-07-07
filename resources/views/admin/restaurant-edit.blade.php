@@ -24,28 +24,29 @@
                                 </div>
                                 <!--/span-->
 
-                                
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Logntitude</label>
-                                        <input type="text" id="lastName" name="longitude" value="{{ $restaurant->longitude }}" class="form-control" placeholder="Please enter longitude" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Row -->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Latitude</label>
-                                        <input type="text" id="lastName" class="form-control" name="latitude" value="{{ $restaurant->latitude }}" required placeholder="Please enter latitude">
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Address</label>
                                         <input type="text" value="{{ $restaurant->address }}" id="address" class="form-control" name="address" required placeholder="Please enter address">
                                     </div>
                                 </div>
+
+                            </div>
+                            <!-- Row -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Longitude</label>
+                                        <input type="text" id="lastName" name="longitude" value="{{ $restaurant->longitude }}" class="form-control" placeholder="Please enter longitude" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Latitude</label>
+                                        <input type="text" id="lastName" class="form-control" name="latitude" value="{{ $restaurant->latitude }}" required placeholder="Please enter latitude">
+                                    </div>
+                                </div>
+
                                 <!--/span-->
 
                                 <!--/span-->

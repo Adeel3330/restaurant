@@ -26,6 +26,7 @@
                                         <th>Name</th>
                                         <th>Opening Time</th>
                                         <th>Closing Time</th>
+                                        <th>Restaurant</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -35,6 +36,7 @@
                                         <th>Name</th>
                                         <th>Opening Time</th>
                                         <th>Closing Time</th>
+                                        <th>Restaurant</th>
                                         <th>Actions</th>
                                     </tr>
                                 </tfoot>
@@ -45,6 +47,7 @@
                                         <td>{{ $week->name }}</td>
                                         <td>{{ $week->opening_time }}</td>
                                         <td>{{ $week->closing_time }}</td>
+                                        <td>{{ $week->restaurants != '' ? $week->restaurants->name:'' }}</td>
 
                                         <td><a href="/admin/week-edit/{{$week->id}}" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="fa fa-check"></i></a> <a href="javascript:void(0)" onclick="deleteItem('<?php echo $week->id ?>' ,'/admin/delete_week_day','Week')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash"></i></a></td>
                                     </tr>

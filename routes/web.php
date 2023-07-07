@@ -47,7 +47,7 @@ Route::middleware('AdminWebLogin')->controller(UserControllerWeb::class)->group(
 });
 
 Route::middleware('AdminWebLogin')->controller(RestaurantTimingController::class)->group(function () {
-    Route::view('/admin/week-create', '/admin/week-create');
+    Route::get('/admin/week-create', 'week_days_create');
     Route::get('/admin/week_days', 'week_days');
     Route::get('/admin/week_days/{id}', 'week_days');
     Route::post('/admin/week_day_create', 'week_day_create');

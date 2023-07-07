@@ -12,8 +12,14 @@ use Illuminate\Validation\Rules\Password;
 class RestaurantTimingController extends Controller
 {
     public function week_days(){
-        $weeks = RestaurantsTimings::all();
+        $weeks = RestaurantsTimings::with('restaurants')->get();
         return view('admin.weeks',compact('weeks'));
+    }
+
+    public function week_days_create()
+    {
+        $restaurants = Restaurants::all();
+        return view('admin.week-create', compact('restaurants'));
     }
     public function edit_week_day($id){
         if(!$id){
@@ -24,7 +30,8 @@ class RestaurantTimingController extends Controller
             return response()->json(['message'=>'Enter Valid Id'],302);
         }
         $week = $week->first();
-        return view('/admin/week-edit',compact('week'));
+        $restaurants = Restaurants::all();
+        return view('/admin/week-edit',compact('week','restaurants'));
     }
 
     public function week_day_create(Request $req){
@@ -32,12 +39,13 @@ class RestaurantTimingController extends Controller
             'name' => 'required',
             'opening_time' => 'required',
             'closing_time' => 'required',
+            'restaurant_id'=>'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         }
-        if(RestaurantsTimings::where('name','LIKE','%'.$req->name.'%')->count() > 0){
+        if(RestaurantsTimings::where('name','LIKE','%'.$req->name.'%')->where('restaurant_id',$req->restaurant_id)->count() > 0){
             return response()->json([
                 'message'=>'Week name already exists'
             ],302);
@@ -46,6 +54,7 @@ class RestaurantTimingController extends Controller
         $restaurant->name = $req->name;
         $restaurant->opening_time = $req->opening_time;
         $restaurant->closing_time = $req->closing_time;
+        $restaurant->restaurant_id = $req->restaurant_id;
         if($restaurant->save()){
             return response()->json([
                 'message'=>'Weeks Created successfully'
@@ -69,13 +78,14 @@ class RestaurantTimingController extends Controller
             'name' => 'required',
             'opening_time' => 'required',
             'closing_time' => 'required',
+            'restaurant_id' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         }
         // dd(RestaurantsTimings::where('name', 'LIKE', '%' . $req->name . '%')->where('id', '!=', $id)->count());
-        if (RestaurantsTimings::where('name', 'LIKE', '%' . $req->name . '%')->where('id','!=',$id)->count() > 0) {
+        if (RestaurantsTimings::where('name', 'LIKE', '%' . $req->name . '%')->where('restaurant_id', $req->restaurant_id)->where('id','!=',$id)->count() > 0) {
             return response()->json([
                 'message' => 'Week name already exists'
             ], 302);
@@ -84,6 +94,7 @@ class RestaurantTimingController extends Controller
             'name'=>$req->name,
             'opening_time'=>$req->opening_time,
             'closing_time' => $req->closing_time,
+            'restaurant_id' => $req->restaurant_id,
         ]);
         if($restaurant) {
             return response()->json([
