@@ -140,7 +140,7 @@ Route::middleware('LoginApi')->controller(OrderController::class)->group(functio
     Route::get('/delete_cart/{id}', 'delete_add_to_cart');
     Route::get('/order', 'order_get');
     Route::get('/order/{id}', 'order_get');
-
+    Route::post('/get_delivery_fee','get_delivery_fee');
     Route::get('/cart', 'cart');
     Route::get('/cart/{id}', 'cart');
 });

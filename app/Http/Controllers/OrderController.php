@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Orders;
 use App\Models\AddtoCarts;
+use App\Models\DeliveryFee;
 use App\Models\OrderItems;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -13,7 +14,8 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
     //
-    public function add_to_cart(Request $request){
+    public function add_to_cart(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             // 'user_id' => 'required',
             'product_id' => 'required',
@@ -24,10 +26,10 @@ class OrderController extends Controller
             return response()->json($validator->errors(), 302);
         }
         $sid = $request->session()->get('id');
-        $carts = AddtoCarts::where('status','Active')->where('user_id',$sid)->where('product_id',$request->product_id);
-        if($carts->count() > 0){
+        $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id);
+        if ($carts->count() > 0) {
             $carts_update = $carts->update([
-                'quantity'=>$request->quantity
+                'quantity' => $request->quantity
             ]);
             if ($carts_update) {
                 return response()->json([
@@ -38,23 +40,19 @@ class OrderController extends Controller
                     "message" => "Something went wrong"
                 ], 302);
             }
-        }
-        else
-        {
+        } else {
             $carts = new AddtoCarts();
             $carts->user_id = $sid;
             $carts->product_id = $request->product_id;
             $carts->quantity = $request->quantity;
             $carts->status = "Active";
-            if($carts->save()){
+            if ($carts->save()) {
                 return response()->json([
-                    "message"=>"Product add to cart successfully"
+                    "message" => "Product add to cart successfully"
                 ], 200);
-            }
-            else
-            {
+            } else {
                 return response()->json([
-                    "message" =>"Something went wrong"
+                    "message" => "Something went wrong"
                 ], 302);
             }
         }
@@ -64,9 +62,10 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'transaction_id' => 'required',
-            'restaurant_id'=>'required',
-            'delivery_type'=>'required',
-            'address'=>'required',
+            'restaurant_id' => 'required',
+            'delivery_type' => 'required',
+            'delivery_fee' => 'required',
+            'address' => 'required',
             'items.*.product_id' => 'required',
             'items.*.payment' => 'required',
             'items.*.quantity' => 'required|numeric',
@@ -115,6 +114,7 @@ class OrderController extends Controller
         $orderscreate->order_no = $order_no;
         $orderscreate->restaurant_id = $request->restaurant_id;
         $orderscreate->delivery_type = $request->delivery_type;
+        $orderscreate->delivery_fee = $request->delivery_fee;
         $orderscreate->address = $request->address;
         $orderscreate->save();
         foreach ($request->items as $key => $item) {
@@ -140,56 +140,50 @@ class OrderController extends Controller
                 "message" => "Something went wrong"
             ], 302);
         }
-
     }
 
 
 
-    public function delete_add_to_cart($id){
-        $carts = AddtoCarts::where('status','Active')->where('id',$id);
-        if($carts->count() > 0){
+    public function delete_add_to_cart($id)
+    {
+        $carts = AddtoCarts::where('status', 'Active')->where('id', $id);
+        if ($carts->count() > 0) {
             $carts_update = $carts->update([
-                'status' =>'delete'
+                'status' => 'delete'
             ]);
-            if($carts_update){
+            if ($carts_update) {
                 return response()->json([
                     "message" => "Cart deleted successfully"
                 ], 200);
-            }
-            else
-            {
+            } else {
                 return response()->json([
                     "message" => "Something went wrong"
                 ], 302);
             }
-        }
-        else{
+        } else {
             return response()->json([
-                "message"=>"Cart already delete or unknown id"
+                "message" => "Cart already delete or unknown id"
             ], 302);
         }
     }
 
-    public function orders($id = null){
-        if(!$id){
+    public function orders($id = null)
+    {
+        if (!$id) {
             $order = Orders::where('status', '!=', 'delete');
-            if($order->count() > 0){
+            if ($order->count() > 0) {
                 // $order->with('order_items')->get();
                 // dd($order);
-                return response()->json($order->with('user','restaurant')->get(), 200);
-            }
-            else
-            {
+                return response()->json($order->with('user', 'restaurant')->get(), 200);
+            } else {
                 return response()->json([
                     "message" => "No order found"
                 ], 302);
             }
-        }
-        else
-        {
-            $order = Orders::where('status', '!=','delete')->where('id',$id);
+        } else {
+            $order = Orders::where('status', '!=', 'delete')->where('id', $id);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product','restaurant')->first(), 200);
+                return response()->json($order->with('user', 'product', 'restaurant')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No order found"
@@ -222,10 +216,10 @@ class OrderController extends Controller
     }
     public function cart($id = null)
     {
-        
+
         $sid = Session::get('id');
         if (!$id) {
-            $order = AddtoCarts::where('status', '!=', 'delete')->where('user_id',$sid);
+            $order = AddtoCarts::where('status', '!=', 'delete')->where('user_id', $sid);
             if ($order->count() > 0) {
                 return response()->json($order->with('user', 'product')->get(), 200);
             } else {
@@ -253,9 +247,9 @@ class OrderController extends Controller
         if (!$id) {
             $order = Orders::where('status', '!=', 'delete')->where('user_id', $sid);
             if ($order->count() > 0) {
-                $orders = $order->with('user','restaurant')->get();
-                foreach($orders as $order){
-                    $order_items = OrderItems::where('order_id',$order['id'])->with('product')->get();
+                $orders = $order->with('user', 'restaurant')->get();
+                foreach ($orders as $order) {
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
@@ -267,7 +261,7 @@ class OrderController extends Controller
         } else {
             $order = Orders::where('status', '!=', 'delete')->where('id', $id)->where('user_id', $sid);
             if ($order->count() > 0) {
-                $orders = $order->with('user','restaurant')->get();
+                $orders = $order->with('user', 'restaurant')->get();
                 foreach ($orders as $order) {
                     $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
                     $order['orders_items'] = $order_items;
@@ -307,6 +301,29 @@ class OrderController extends Controller
             return response()->json([
                 "message" => "Something Went wrong",
             ], 200);
+        }
+    }
+
+    public function get_delivery_fee(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'distance' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 302);
+        }
+        $delivery_fee = DeliveryFee::where('status', 'Active')->first();
+        if ($request->distance <= $delivery_fee->free_delivery) {
+            // delivery fee is free when distance less than or equal to two km.
+            return $delivery_fee = 0;
+        } else {
+
+            $basic_charge = $delivery_fee->basic_delivery_charge;
+            $charge_per_kilo = $delivery_fee->charge_per_kilo;
+            $distance = $request->distance - $delivery_fee->free_delivery;
+            $delivery_fee['delivery_fee'] = $basic_charge + ($distance * $charge_per_kilo);
+            return $delivery_fee;
         }
     }
 }

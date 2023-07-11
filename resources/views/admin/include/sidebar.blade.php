@@ -133,6 +133,9 @@
                     <a href="/admin/carts"><i class="icon-basket-loaded mr-10"></i>Carts <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>
+                    <a href="/admin/delivery_fees"><i class="fa fa-dollar mr-10"></i>Delivery Fee <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
+                </li>
+                <li>
                     <a href="/admin/orders"><i class="fa fa-first-order mr-10"></i>Orders <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>

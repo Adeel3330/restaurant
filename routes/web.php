@@ -6,13 +6,14 @@ use App\Http\Controllers\UserControllerWeb;
 use App\Http\Controllers\AdminControllerWeb;
 use App\Http\Controllers\OrderControllerWeb;
 use App\Http\Controllers\BannerControllerWeb;
+use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\ProductControllerWeb;
 use App\Http\Controllers\CategoryControllerWeb;
-use App\Http\Controllers\DriverControllerWeb;
+use App\Http\Controllers\DeliveryControllerWeb;
 use App\Http\Controllers\RestaurantControllerWeb;
-use App\Http\Controllers\RestaurantOwnerControllerWeb;
 use App\Http\Controllers\SubcategoryControllerWeb;
 use App\Http\Controllers\RestaurantTimingController;
+use App\Http\Controllers\RestaurantOwnerControllerWeb;
 
 /*
 |--------------------------------------------------------------------------
@@ -164,6 +165,20 @@ Route::middleware('AdminWebLogin')->controller(RestaurantOwnerControllerWeb::cla
     Route::get('/admin/owner-create', 'owner_create_view');
     Route::post('/admin/update_owner_status/{id}', 'update_owner_status');
 });
+
+
+Route::middleware('AdminWebLogin')->controller(DeliveryControllerWeb::class)->group(function () {
+    Route::post('/admin/delivery_fee_create', 'delivery_fee_create');
+    Route::get('/admin/delete_delivery_fee', 'delete_delivery_fee');
+    Route::get('/admin/delete_delivery_fee/{id}', 'delete_delivery_fee');
+    Route::post('/admin/edit_delivery_fee/{id}', 'edit_delivery_fee');
+    Route::get('/admin/delivery-fee-edit/{id}', 'delivery_fee_edit');
+    Route::get('/admin/delivery_fees', 'delivery_fees');
+    Route::get('/admin/delivery_fees/{id}', 'delivery_fees');
+    Route::get('/admin/delivery-fee-create', 'delivery_fee_create_view');
+    Route::post('/admin/update_delivery_fee_status/{id}', 'update_delivery_fee_status');
+});
+
 
 
 
