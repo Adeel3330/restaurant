@@ -130,6 +130,17 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addons_dr"><i class="fa fa-plus mr-10"></i>Addons<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <ul id="addons_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="/admin/addons">Addons</a>
+                        </li>
+                        <li>
+                            <a href="/admin/addon-create">Addon Create</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="/admin/carts"><i class="icon-basket-loaded mr-10"></i>Carts <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>

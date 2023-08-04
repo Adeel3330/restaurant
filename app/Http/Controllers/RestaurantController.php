@@ -291,7 +291,7 @@ class RestaurantController extends Controller
             if ($order->count() > 0) {
                 $orders = $order->where('restaurant_id',$sid)->with('user')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product','addon')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
@@ -305,7 +305,7 @@ class RestaurantController extends Controller
             if ($order->count() > 0) {
                 $orders = $order->with('user')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product','addon')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);

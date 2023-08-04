@@ -115,7 +115,7 @@ class DriverController extends Controller
             if ($order->count() > 0) {
                 $orders = $order->with('order', 'order.user', 'order.user.user_address')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order->order_id)->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order->order_id)->with('product','addon')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
@@ -129,7 +129,7 @@ class DriverController extends Controller
             if ($order->count() > 0) {
                 $orders = $order->with('user')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product','addon')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);

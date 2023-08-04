@@ -6,14 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Homecontroller;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AddonController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FlameController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DriverControllerWeb;
-use App\Http\Controllers\FlameController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\RestaurantOwnerController;
@@ -231,5 +232,13 @@ Route::middleware('RestaurantLogin')->controller(RestaurantController::class)->g
 });
 
 
-
+Route::middleware('RestaurantLogin')->controller(AddonController::class)->group(function () {
+    Route::get('/restaurant/addons', 'addons');
+});
+Route::middleware('DriverLogin')->controller(AddonController::class)->group(function () {
+    Route::get('/driver/addons', 'addons');
+});
+Route::controller(AddonController::class)->group(function () {
+    Route::get('/addons', 'addons');
+});
 

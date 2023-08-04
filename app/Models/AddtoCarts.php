@@ -20,10 +20,18 @@ class AddtoCarts extends Model
         return $this->belongsTo(Products::class);
     }
 
+    public function addon()
+    {
+        return $this->belongsTo(Addon::class)->withDefault([
+            'name' => 'No Addon'
+        ]);
+    }
+
     protected $fillable = [
         'user_id',
         'product_id',
         'quantity',
-        'status'
+        'status',
+        'addon_id'
     ];
 }

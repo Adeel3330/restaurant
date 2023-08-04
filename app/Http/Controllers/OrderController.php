@@ -26,7 +26,13 @@ class OrderController extends Controller
             return response()->json($validator->errors(), 302);
         }
         $sid = $request->session()->get('id');
+        if(isset($request->addon_id) && !empty($request->addon_id)){
+            $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id)->where('addon_id',$request->addon_id);
+        }
+        else{
         $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id);
+        }
+
         if ($carts->count() > 0) {
             $carts_update = $carts->update([
                 'quantity' => $request->quantity
@@ -44,6 +50,9 @@ class OrderController extends Controller
             $carts = new AddtoCarts();
             $carts->user_id = $sid;
             $carts->product_id = $request->product_id;
+            if (isset($request->addon_id) && !empty($request->addon_id)) {
+                $carts->addon_id = $request->addon_id;
+            }
             $carts->quantity = $request->quantity;
             $carts->status = "Active";
             if ($carts->save()) {
@@ -80,20 +89,39 @@ class OrderController extends Controller
             $order = $carts->first();
             $order_id = $order['id'];
             foreach ($request->items as $item) {
-                $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->count();
-                if ($count > 0) {
-                    $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
-                        'payment' => $item['payment'],
-                        'quantity' => $item['quantity'],
-                    ]);
-                } else {
-                    $order_items = OrderItems::create([
-                        'product_id' => $item['product_id'],
-                        'payment' => $item['payment'],
-                        'quantity' => $item['quantity'],
-                        'order_id' => $order_id,
-                    ]);
+                if (isset($item->addon_id) && !empty($item->addon_id)) {
+                    $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->where('addon_id', $item['addon_id'])->count();
+                    if ($count > 0) {
+                        $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->where('addon_id', $item['addon_id'])->update([
+                            'payment' => $item['payment'],
+                            'quantity' => $item['quantity'],
+                        ]);
+                    } else {
+                        $order_items = OrderItems::create([
+                            'product_id' => $item['product_id'],
+                            'addon_id' => $item['addon_id'],
+                            'payment' => $item['payment'],
+                            'quantity' => $item['quantity'],
+                            'order_id' => $order_id,
+                        ]);
+                    }
+                }else{
+                    $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->count();
+                    if ($count > 0) {
+                        $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
+                            'payment' => $item['payment'],
+                            'quantity' => $item['quantity'],
+                        ]);
+                    } else {
+                        $order_items = OrderItems::create([
+                            'product_id' => $item['product_id'],
+                            'payment' => $item['payment'],
+                            'quantity' => $item['quantity'],
+                            'order_id' => $order_id,
+                        ]);
+                    }
                 }
+                
             }
             if ($order_items) {
                 return response()->json([
@@ -123,6 +151,9 @@ class OrderController extends Controller
             $order_items = new OrderItems;
             $order_items->order_id = $order_id;
             $order_items->product_id = $item['product_id'];
+            if (isset($item->addon_id) && !empty($item->addon_id)) {
+                $order_items->addon_id = $item['addon_id'];
+            }
             $order_items->payment = $item['payment'];
             $order_items->quantity = $item['quantity'];
             $res = $order_items->save();
@@ -197,7 +228,7 @@ class OrderController extends Controller
         if (!$id) {
             $order = AddtoCarts::where('status', '!=', 'delete');
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->get(), 200);
+                return response()->json($order->with('user', 'product', 'addon')->get(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
@@ -206,7 +237,7 @@ class OrderController extends Controller
         } else {
             $order = AddtoCarts::where('status', '!=', 'delete')->where('id', $id);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->first(), 200);
+                return response()->json($order->with('user', 'product', 'addon')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
@@ -221,7 +252,7 @@ class OrderController extends Controller
         if (!$id) {
             $order = AddtoCarts::where('status', '!=', 'delete')->where('user_id', $sid);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->get(), 200);
+                return response()->json($order->with('user', 'product','addon')->get(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
@@ -230,7 +261,7 @@ class OrderController extends Controller
         } else {
             $order = AddtoCarts::where('status', '!=', 'delete')->where('id', $id)->where('user_id', $sid);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product')->first(), 200);
+                return response()->json($order->with('user', 'product','addon')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
@@ -249,7 +280,7 @@ class OrderController extends Controller
             if ($order->count() > 0) {
                 $orders = $order->with('user', 'restaurant')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product','addon')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);
@@ -263,7 +294,7 @@ class OrderController extends Controller
             if ($order->count() > 0) {
                 $orders = $order->with('user', 'restaurant')->get();
                 foreach ($orders as $order) {
-                    $order_items = OrderItems::where('order_id', $order['id'])->with('product')->get();
+                    $order_items = OrderItems::where('order_id', $order['id'])->with('product','addon')->get();
                     $order['orders_items'] = $order_items;
                 }
                 return response()->json($orders, 200);

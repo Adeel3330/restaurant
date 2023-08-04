@@ -13,6 +13,12 @@ class OrderItems extends Model
     {
         return $this->belongsTo(Products::class);
     }
+    public function addon()
+    {
+        return $this->belongsTo(Addon::class)->withDefault([
+            'name' => 'No Addon'
+        ]);
+    }
     public function order()
     {
         return $this->hasMany(Orders::class,'id','order_id');
@@ -24,5 +30,6 @@ class OrderItems extends Model
         'quantity',
         'payment',
         'order_id',
+        'addon_id'
     ];
 }

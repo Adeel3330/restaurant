@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserControllerWeb;
+use App\Http\Controllers\AddonControllerWeb;
 use App\Http\Controllers\AdminControllerWeb;
 use App\Http\Controllers\OrderControllerWeb;
 use App\Http\Controllers\BannerControllerWeb;
@@ -179,6 +180,15 @@ Route::middleware('AdminWebLogin')->controller(DeliveryControllerWeb::class)->gr
     Route::post('/admin/update_delivery_fee_status/{id}', 'update_delivery_fee_status');
 });
 
-
+Route::middleware('AdminWebLogin')->controller(AddonControllerWeb::class)->group(function () {
+    Route::post('/admin/addon_create', 'addon_create');
+    Route::get('/admin/delete_addon', 'delete_addon');
+    Route::get('/admin/delete_addon/{id}', 'delete_addon');
+    Route::post('/admin/edit_addon/{id}', 'edit_addon');
+    Route::get('/admin/addons', 'addons');
+    Route::get('/admin/addons/{id}', 'addons');
+    Route::get('/admin/addon-create', 'addon_create_view');
+    Route::get('/admin/addon-edit/{id}', 'addon_edit_view');
+});
 
 
