@@ -17,8 +17,12 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DriverControllerWeb;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\AddonCategoryController;
 use App\Http\Controllers\RestaurantOwnerController;
+use App\Http\Controllers\AddonCategoryControllerWeb;
+use App\Http\Controllers\AddonSubCategoryController;
 use App\Http\Controllers\RestaurantTimingController;
+use App\Http\Controllers\AddonSubCategoryControllerWeb;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +103,18 @@ Route::middleware('AdminLoginApi')->controller(BannerController::class)->group(f
 
 
 
+Route::middleware('LoginApi')->controller(SubcategoryController::class)->group(function () {
+    Route::get('/sub_categories', 'sub_categories');
+    Route::get('/sub_categories/{id}', 'sub_categories');
+});
+Route::middleware('LoginApi')->controller(AddonCategoryController::class)->group(function () {
+    Route::get('/addon_categories', 'addon_categories');
+    Route::get('/addon_categories/{id}', 'addon_categories');
+});
+Route::middleware('LoginApi')->controller(AddonSubCategoryController::class)->group(function () {
+    Route::get('/addon_sub_categories', 'addon_sub_categories');
+    Route::get('/addon_sub_categories/{id}', 'addon_sub_categories');
+});
 Route::middleware('LoginApi')->controller(SubcategoryController::class)->group(function () {
     Route::get('/sub_categories', 'sub_categories');
     Route::get('/sub_categories/{id}', 'sub_categories');
