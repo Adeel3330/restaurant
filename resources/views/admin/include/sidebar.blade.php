@@ -108,6 +108,17 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addon_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Addon Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <ul id="addon_cate_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="/admin/addon-categories">Addon Categories</a>
+                        </li>
+                        <li>
+                            <a href="/admin/addon-category-create">Addon Category Create</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="javascript:void(0);" data-toggle="collapse" data-target="#sub_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Sub Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="sub_cate_dr" class="collapse collapse-level-1">
                         <li>
@@ -115,6 +126,17 @@
                         </li>
                         <li>
                             <a href="/admin/sub-category-create">Sub Category Create</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addon_sub_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Addon Sub Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <ul id="addon_sub_cate_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="/admin/addon-sub-categories">Addon Sub Categories</a>
+                        </li>
+                        <li>
+                            <a href="/admin/addon-sub-category-create">Addon Sub Category Create</a>
                         </li>
                     </ul>
                 </li>

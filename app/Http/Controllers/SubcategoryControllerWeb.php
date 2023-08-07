@@ -92,9 +92,6 @@ class SubcategoryControllerWeb extends Controller
         $sub_categories = SubCategories::with('category', 'restaurant')->where('status', 'Active')->get();
         return view('admin.subcategories', compact('sub_categories'));
     }
-
-
-
     public function edit_sub_category(Request $request, $id)
     {
         if (SubCategories::where('status', 'Active')->where('id', $id)->count() > 0) {

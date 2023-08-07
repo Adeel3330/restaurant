@@ -13,8 +13,10 @@ use App\Http\Controllers\CategoryControllerWeb;
 use App\Http\Controllers\DeliveryControllerWeb;
 use App\Http\Controllers\RestaurantControllerWeb;
 use App\Http\Controllers\SubcategoryControllerWeb;
+use App\Http\Controllers\AddonCategoryControllerWeb;
 use App\Http\Controllers\RestaurantTimingController;
 use App\Http\Controllers\RestaurantOwnerControllerWeb;
+use App\Http\Controllers\AddonSubCategoryControllerWeb;
 
 /*
 |--------------------------------------------------------------------------
@@ -189,6 +191,28 @@ Route::middleware('AdminWebLogin')->controller(AddonControllerWeb::class)->group
     Route::get('/admin/addons/{id}', 'addons');
     Route::get('/admin/addon-create', 'addon_create_view');
     Route::get('/admin/addon-edit/{id}', 'addon_edit_view');
+});
+
+Route::middleware('AdminWebLogin')->controller(AddonCategoryControllerWeb::class)->group(function () {
+    Route::post('/admin/addon_category_create', 'addon_category_create');
+    Route::get('/admin/delete_addon_category', 'delete_addon_category');
+    Route::get('/admin/delete_addon_category/{id}', 'delete_addon_category');
+    Route::post('/admin/edit_addon_category/{id}', 'edit_addon_category');
+    Route::get('/admin/addon-category-edit/{id}', 'edit_addon_category_view');
+    Route::get('/admin/addon-categories', 'addon_categories');
+    Route::get('/admin/addon_categories/{id}', 'addon_categories');
+    Route::get('/admin/addon-category-create', 'addon_category_create_view');
+});
+
+Route::middleware('AdminWebLogin')->controller(AddonSubCategoryControllerWeb::class)->group(function () {
+    Route::post('/admin/addon_sub_category_create', 'addon_sub_category_create');
+    Route::get('/admin/delete_addon_sub_category', 'delete_addon_sub_category');
+    Route::get('/admin/delete_addon_sub_category/{id}', 'delete_addon_sub_category');
+    Route::post('/admin/edit_addon_sub_category/{id}', 'edit_addon_sub_category');
+    Route::get('/admin/addon-sub-category-edit/{id}', 'edit_addon_sub_category_view');
+    Route::get('/admin/addon-sub-categories', 'addon_sub_categories');
+    Route::get('/admin/addon_sub_categories/{id}', 'addon_sub_categories');
+    Route::get('/admin/addon-sub-category-create', 'addon_sub_category_create_view');
 });
 
 

@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('addto_carts', function (Blueprint $table) {
-            //
             $table->unsignedBigInteger('addon_id')->nullable();
             $table->foreign('addon_id')->references('id')->on('addons')->change();
         });
