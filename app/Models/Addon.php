@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\AddonCategory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Addon extends Model
 {
@@ -12,12 +13,12 @@ class Addon extends Model
     public function category()
     {
         // body...
-        return $this->belongsTo(Categories::class);
+        return $this->belongsTo(AddonCategory::class,'category_id');
     }
     public function sub_category()
     {
         // body...
-        return $this->belongsTo(SubCategories::class);
+        return $this->belongsTo(AddonSubCategory::class,'sub_category_id');
     }
 
     public function restaurant()

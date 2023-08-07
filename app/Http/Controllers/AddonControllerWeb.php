@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Addon;
+use App\Models\AddonCategory;
 use App\Models\addons;
 use App\Models\Categories;
 use App\Models\Restaurants;
 use Illuminate\Http\Request;
 use App\Models\addonFlavours;
+use App\Models\AddonSubCategory;
 use App\Models\Flavouraddons;
 // use App\Models\FlavourAddons;
 use App\Models\ProductFlavours;
@@ -108,7 +110,8 @@ class AddonControllerWeb extends Controller
     }
     public function addons($id = null)
     {
-        $addons = Addon::where('status', 'Active')->get();
+        $addons = Addon::where('status', 'Active')->with('category','sub_category')->get();
+        // dd($addons);
         return view('admin.addons', compact('addons'));
     }
 
@@ -246,8 +249,8 @@ class AddonControllerWeb extends Controller
     public function addon_create_view()
     {
         $restaurants = Restaurants::where('status', 'Active')->get();
-        $categories = Categories::where('status', 'Active')->get();
-        $sub_categories = SubCategories::where('status', 'Active')->get();
+        $categories = AddonCategory::where('status', 'Active')->get();
+        $sub_categories = AddonSubCategory::where('status', 'Active')->get();
         $flavours = ProductFlavours::where('status', 'Active')->get();
         return view('admin.addon-create', compact('restaurants', 'categories', 'sub_categories', 'flavours'));
     }
@@ -256,8 +259,8 @@ class AddonControllerWeb extends Controller
     public function addon_edit_view($id)
     {
         $restaurants = Restaurants::where('status', 'Active')->get();
-        $categories = Categories::where('status', 'Active')->get();
-        $sub_categories = SubCategories::where('status', 'Active')->get();
+        $categories = AddonCategory::where('status', 'Active')->get();
+        $sub_categories = AddonSubCategory::where('status', 'Active')->get();
         $flavours = ProductFlavours::where('status', 'Active')->get();
         $addons = Addon::where('status', 'Active')->where('id', $id)->with('restaurant', 'category', 'sub_category', 'flavour_ids');
         if ($addons->count() <= 0) return redirect('/admin/addons');
