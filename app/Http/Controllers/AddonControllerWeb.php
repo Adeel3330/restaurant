@@ -24,28 +24,21 @@ class AddonControllerWeb extends Controller
     {
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
-            'sub_category_id' => 'required',
-            'restaurant_ids' => 'required',
-            'name' => ['required', Rule::unique('addons')->where('restaurant_id', $request->restaurant_id)->where('status', 'Active')],
+            'name' => ['required', Rule::unique('addons')->where('status', 'Active')],
             'price' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         } else {
-            foreach ($request->restaurant_ids as $restaurant_id) {
-
+           
                         $category = new Addon();
                         $category->name = $request->name;
                         $category->category_id = $request->category_id;
-                        $category->restaurant_id = $restaurant_id;
-                        $category->sub_category_id = $request->sub_category_id;
-                        
                         $category->price = $request->price;
                         $category->status = "Active";
                         $result =    $category->save();
-                       
-                    }
+                 
                     if ($result) {
 
                         return response()->json([
@@ -89,7 +82,7 @@ class AddonControllerWeb extends Controller
     }
     public function addons($id = null)
     {
-        $addons = Addon::where('status', 'Active')->with('category','sub_category')->get();
+        $addons = Addon::where('status', 'Active')->with('category')->get();
         // dd($addons);
         return view('admin.addons', compact('addons'));
     }
@@ -101,13 +94,11 @@ class AddonControllerWeb extends Controller
         if (Addon::where('status', 'Active')->where('id', $id)->count() > 0) {
                 $validator = Validator::make($request->all(), [
                     'name' => ['required'],
-                    'category_id' => 'required',
-                    'sub_category_id' => 'required',
+                    'category_id' => 'required', 
                     'price' => 'required',
-                    'restaurant_id' => 'required',
                 ]);
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
-            if (Addon::where('status', 'Active')->where('restaurant_id', $request->id)->where('id', '!=', $id)->where('name', 'LIKE', $request->name)->count() > 0) {
+            if (Addon::where('status', 'Active')->where('id', '!=', $id)->where('name', 'LIKE', $request->name)->count() > 0) {
                 return response()->json([
                     "message" => "The name has already been taken"
                 ], 302);
@@ -118,8 +109,6 @@ class AddonControllerWeb extends Controller
                 $category = Addon::where('id', $id)->update([
                             'name' => $request->name,
                             'category_id' => $request->category_id,
-                            'sub_category_id' => $request->sub_category_id,
-                            'restaurant_id' => $request->restaurant_id,
                             'price' => $request->price,
                         ]);
                         if ($category) {
@@ -151,7 +140,7 @@ class AddonControllerWeb extends Controller
         }
         $addons = Addon::where('restaurant_id', $request->id)->where('name', 'LIKE', '%' . $request->search . "%");
         if ($addons->count() > 0) {
-            return response()->json($addons->with('restaurant', 'category', 'sub_category')->get(), 200);
+            return response()->json($addons->with('restaurant', 'category')->get(), 200);
         } else {
             return response()->json([
                 "message" => "No record Found"
@@ -161,24 +150,22 @@ class AddonControllerWeb extends Controller
 
     public function addon_create_view()
     {
-        $restaurants = Restaurants::where('status', 'Active')->get();
-        $categories = AddonCategory::where('status', 'Active')->get();
-        $sub_categories = AddonSubCategory::where('status', 'Active')->get();
-        return view('admin.addon-create', compact('restaurants', 'categories', 'sub_categories'));
+        $categories = AddonCategory::where('status', 'Active')->get();   
+        return view('admin.addon-create', compact('categories'));
     }
 
 
     public function addon_edit_view($id)
     {
-        $restaurants = Restaurants::where('status', 'Active')->get();
+        // $restaurants = Restaurants::where('status', 'Active')->get();
         $categories = AddonCategory::where('status', 'Active')->get();
-        $sub_categories = AddonSubCategory::where('status', 'Active')->get();
+        // $sub_categories = AddonSubCategory::where('status', 'Active')->get();
 
-        $addons = Addon::where('status', 'Active')->where('id', $id)->with('restaurant', 'category', 'sub_category', 'flavour_ids');
+        $addons = Addon::where('status', 'Active')->where('id', $id)->with('category');
         if ($addons->count() <= 0) return redirect('/admin/addons');
         $addon = $addons->first();
         // dd($addon);
-        return view('admin.addon-edit', compact('restaurants', 'categories', 'sub_categories', 'addon'));
+        return view('admin.addon-edit', compact( 'categories', 'addon'));
     }
 
 }

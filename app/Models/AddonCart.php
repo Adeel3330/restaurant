@@ -12,4 +12,11 @@ class AddonCart extends Model
     public function addon(){
         return $this->belongsTo(Addon::class,'addon_id');
     }
+    //  public function addons()
+    // {
+  
+    //     return  $this->hasMany(AddonCart::class, 'cart_id')->with('addon')->withDefault([
+    //         'name' => 'No Addon'
+    //     ]);
+    // }
 }

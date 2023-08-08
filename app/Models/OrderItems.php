@@ -19,10 +19,7 @@ class OrderItems extends Model
     }
     public function addon()
     {
-
-        return  $this->hasMany(AddonOrderItems::class, 'order_item_id')->with('addon')->withDefault([
-            'name' => 'No Addon'
-        ]);
+        return  $this->hasMany(AddonOrderItems::class, 'order_item_id')->with('addon');
     }
 
     protected $fillable = [

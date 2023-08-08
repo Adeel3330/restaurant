@@ -22,7 +22,7 @@
                                         <th>ID #</th>
                                         <th>Name</th>
                                         <th>Category</th>
-                                        <th>Sub Category</th>
+                                       
                                       
                                         <th>Price</th>
                                         <th>Actions</th>
@@ -33,7 +33,7 @@
                                         <th>ID #</th>
                                         <th>Name</th>
                                         <th>Category</th>
-                                        <th>Sub Category</th>
+                                    
                                   
                                         <th>Price</th>
                                         <th>Actions</th>
@@ -45,7 +45,7 @@
                                         <td>{{ $addon->id }}</td>
                                         <td>{{ $addon->name }}</td>
                                         <td>{{ $addon->category->name }}</td>
-                                        <td>{{ $addon->sub_category->name }}</td>
+                                        
                                         <td>{{ $addon->price }}</td>
                                         <td><a href="/admin/addon-edit/{{$addon->id}}" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="fa fa-check"></i></a> <a href="javascript:void(0)" onclick="deleteItem('<?php echo $addon->id ?>' ,'/admin/delete_addon','addon')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash"></i></a></td>
                                     </tr>

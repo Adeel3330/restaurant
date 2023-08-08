@@ -19,14 +19,12 @@ class AddtoCarts extends Model
     {
         return $this->belongsTo(Products::class);
     }
-
-    public function addons()
+    public function addon()
     {
-  
-        return  $this->hasMany(AddonCart::class, 'cart_id')->with('addon')->withDefault([
-            'name' => 'No Addon'
-        ]);
+        return  $this->hasMany(AddonCart::class, 'cart_id','id')->with('addon');
     }
+
+   
 
     protected $fillable = [
         'user_id',

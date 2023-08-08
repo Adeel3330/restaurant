@@ -36,34 +36,7 @@
                                 </div>
                                 <!--/span-->
                             </div>
-                            <div class="row mt-10">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Sub Categories</label>
-                                        <select name="sub_category_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
-                                            @forelse ($sub_categories as $sub_category)
-                                            <option value="{{ $sub_category->id }}" {{ $addon->sub_category_id == $sub_category->id ? "selected":"" }}>{{ $sub_category->name }}</option>
-                                            @empty
-                                            <option value="">No Sub Category found</option>
-                                            @endforelse
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Restaurants</label>
-                                        <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
-                                            @forelse ($restaurants as $restaurant)
-                                            <option value="{{ $restaurant->id }}" {{ $addon->restaurant_id == $restaurant->id ? "selected":"" }}>{{ $restaurant->name }}</option>
-                                            @empty
-                                            <option value="">No Restaurant found</option>
-                                            @endforelse
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">

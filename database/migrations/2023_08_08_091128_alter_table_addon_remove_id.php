@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        // Schema::table(
-        //     'order_items',
-        //     function (Blueprint $table) {
-        //         $table->dropConstrainedForeignId('addon_id');
-        //     }
-        // );
+        Schema::table(
+            'addons',
+            function (Blueprint $table) {
+                $table->dropConstrainedForeignId('restaurant_id');
+                $table->dropConstrainedForeignId('sub_category_id');
+            }
+        );
     }
 
     /**

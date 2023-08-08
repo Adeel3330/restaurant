@@ -268,7 +268,7 @@ class OrderController extends Controller
         if (!$id) {
             $order = AddtoCarts::where('status', '!=', 'delete');
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product', 'addon')->get(), 200);
+                return response()->json($order->with('user', 'product')->get(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
@@ -277,7 +277,7 @@ class OrderController extends Controller
         } else {
             $order = AddtoCarts::where('status', '!=', 'delete')->where('id', $id);
             if ($order->count() > 0) {
-                return response()->json($order->with('user', 'product', 'addon')->first(), 200);
+                return response()->json($order->with('user', 'product')->first(), 200);
             } else {
                 return response()->json([
                     "message" => "No cart found"
