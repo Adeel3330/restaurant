@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddonCart;
+use App\Models\AddonOrderItems;
 use App\Models\Orders;
 use App\Models\AddtoCarts;
 use App\Models\DeliveryFee;
@@ -26,18 +28,24 @@ class OrderController extends Controller
             return response()->json($validator->errors(), 302);
         }
         $sid = $request->session()->get('id');
-        if(isset($request->addon_id) && !empty($request->addon_id)){
-            $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id)->where('addon_id',$request->addon_id);
-        }
-        else{
+        
         $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id);
-        }
-
-        if ($carts->count() > 0) {
+    if ($carts->count() > 0) {
             $carts_update = $carts->update([
                 'quantity' => $request->quantity
             ]);
             if ($carts_update) {
+                $carts_app = $carts->first();
+                $cart_id = $carts_app['id'];
+                if (isset($request->addon_ids) && !empty($request->addon_ids)) {
+                    $addon_delet = AddonCart::where('cart_id', $cart_id)->delete();
+                     foreach ($request->addon_ids as $addon_id) {
+                        $addon_cart = AddonCart::create([
+                            'addon_id'=> $addon_id,
+                            'cart_id'=> $cart_id
+                        ]);
+                    }
+                }
                 return response()->json([
                     "message" => "Product add to cart updated successfully"
                 ], 200);
@@ -50,12 +58,20 @@ class OrderController extends Controller
             $carts = new AddtoCarts();
             $carts->user_id = $sid;
             $carts->product_id = $request->product_id;
-            if (isset($request->addon_id) && !empty($request->addon_id)) {
-                $carts->addon_id = $request->addon_id;
-            }
+           
             $carts->quantity = $request->quantity;
             $carts->status = "Active";
             if ($carts->save()) {
+                $carts_app = $carts->first();
+                $cart_id = $carts_app['id'];
+                if (isset($request->addon_ids) && !empty($request->addon_ids)) {
+                    foreach ($request->addon_ids as $addon_id) {
+                        $addon_cart = AddonCart::create([
+                            'addon_id'=> $addon_id,
+                            'cart_id'=> $cart_id
+                        ]);
+                    }
+                }
                 return response()->json([
                     "message" => "Product add to cart successfully"
                 ], 200);
@@ -89,13 +105,22 @@ class OrderController extends Controller
             $order = $carts->first();
             $order_id = $order['id'];
             foreach ($request->items as $item) {
-                if (isset($item->addon_id) && !empty($item->addon_id)) {
-                    $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->where('addon_id', $item['addon_id'])->count();
+                if (isset($item->addon_ids) && !empty($item->addon_ids)) {
+                    $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->count();
                     if ($count > 0) {
-                        $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->where('addon_id', $item['addon_id'])->update([
+                        $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
                         ]);
+                        $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
+                        foreach($request->$item->addon_ids as $addon_id){
+                            $addon_order_items = AddonOrderItems::where('order_item_id',$order_items['id'])->delete();
+                            $order_addon_items = AddonOrderItems::create([
+                                'order_item_id'=>$order_items['id'],
+                                'addon_id'=>$addon_id,
+                            ]);
+                        }
+
                     } else {
                         $order_items = OrderItems::create([
                             'product_id' => $item['product_id'],
@@ -104,6 +129,13 @@ class OrderController extends Controller
                             'quantity' => $item['quantity'],
                             'order_id' => $order_id,
                         ]);
+                        $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
+                        foreach ($request->$item->addon_ids as $addon_id) {
+                            $order_addon_items = AddonOrderItems::create([
+                                'order_item_id' => $order_items['id'],
+                                'addon_id' => $addon_id,
+                            ]);
+                        }
                     }
                 }else{
                     $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->count();
@@ -146,17 +178,25 @@ class OrderController extends Controller
         $orderscreate->address = $request->address;
         $orderscreate->save();
         foreach ($request->items as $key => $item) {
+            
             $order = Orders::where('user_id', $sid)->where('status', 'Accepting order')->orderBy('created_at', 'desc')->first();
             $order_id = $order['id'];
             $order_items = new OrderItems;
             $order_items->order_id = $order_id;
             $order_items->product_id = $item['product_id'];
-            if (isset($item->addon_id) && !empty($item->addon_id)) {
-                $order_items->addon_id = $item['addon_id'];
-            }
+           
             $order_items->payment = $item['payment'];
             $order_items->quantity = $item['quantity'];
             $res = $order_items->save();
+            if(isset($item->addon_ids) && !empty($item->addon_ids)){
+                $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
+                foreach ($request->$item->addon_ids as $addon_id) {
+                    $order_addon_items = AddonOrderItems::create([
+                        'order_item_id' => $order_items['id'],
+                        'addon_id' => $addon_id,
+                    ]);
+                }
+            }
         }
         if ($res) {
             $carts = AddtoCarts::where('user_id', $sid)->update([

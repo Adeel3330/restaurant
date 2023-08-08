@@ -67,53 +67,12 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label mb-10">Description</label>
-                                        <textarea name="description" required cols="80" rows="4" class="form-control" placeholder="Enter Addon description">{{ $addon->description }}</textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
                                         <label class="control-label mb-10">Price</label>
                                         <input type="number" name="price" required class="form-control" value="{{ $addon->price }}" placeholder="Enter Addon description">
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Flavours</label>
-                                        <select name="flavour_ids[]" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" multiple>
-                                            @forelse ($flavours as $flavour)
-                                            <option value="{{ $flavour->id }}" @foreach($addon->flavour_ids as $flavour_id)
-                                                {{$flavour_id->flavour_id == $flavour->id ? "selected":"" }}
-                                                @endforeach
-                                                >{{ $flavour->name }}
-                                            </option>
-                                            @empty
-                                            <option value="">No flavour found</option>
-                                            @endforelse
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="seprator-block"></div>
-                            <h6 class="txt-dark capitalize-font"><i class="icon-picture mr-10"></i>upload image</h6>
-                            <hr>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="img-upload-wrap">
-                                        <div id="imagePreview">
-                                            <img src="{{ url('/image/addon/'.$addon->image) }}" width="80">
-                                        </div>
-                                        <!-- <img class="img-responsive" src="dist/img/chair.jpg" alt="upload_img"> -->
-                                    </div>
-                                    <div class="fileupload btn btn-info btn-anim"><i class="fa fa-upload"></i><span class="btn-text">Upload new image</span>
-                                        <input type="file" class="upload" name="image" id="uploadFile" accept="image/*">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="seprator-block"></div>
+                          
                             <div class="form-actions">
                                 <button class="btn btn-success btn-icon left-icon mr-10" id="updatebtn"> <i class="fa fa-check"></i> <span>save</span></button>
                                 <button type="button" class="btn btn-warning" onclick="window.location.assign('/admin/addons')">Cancel</button>

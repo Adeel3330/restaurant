@@ -13,23 +13,22 @@ class OrderItems extends Model
     {
         return $this->belongsTo(Products::class);
     }
-    public function addon()
-    {
-        return $this->belongsTo(Addon::class)->withDefault([
-            'name' => 'No Addon'
-        ]);
-    }
     public function order()
     {
         return $this->hasMany(Orders::class,'id','order_id');
     }
-    
+    public function addon()
+    {
+
+        return  $this->hasMany(AddonOrderItems::class, 'order_item_id')->with('addon')->withDefault([
+            'name' => 'No Addon'
+        ]);
+    }
 
     protected $fillable = [
         'product_id',
         'quantity',
         'payment',
         'order_id',
-        'addon_id'
     ];
 }

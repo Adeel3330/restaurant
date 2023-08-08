@@ -20,9 +20,10 @@ class AddtoCarts extends Model
         return $this->belongsTo(Products::class);
     }
 
-    public function addon()
+    public function addons()
     {
-        return $this->belongsTo(Addon::class)->withDefault([
+  
+        return  $this->hasMany(AddonCart::class, 'cart_id')->with('addon')->withDefault([
             'name' => 'No Addon'
         ]);
     }
@@ -32,6 +33,5 @@ class AddtoCarts extends Model
         'product_id',
         'quantity',
         'status',
-        'addon_id'
     ];
 }
