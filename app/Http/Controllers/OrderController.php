@@ -58,7 +58,6 @@ class OrderController extends Controller
             $carts = new AddtoCarts();
             $carts->user_id = $sid;
             $carts->product_id = $request->product_id;
-           
             $carts->quantity = $request->quantity;
             $carts->status = "Active";
             if ($carts->save()) {
@@ -144,6 +143,16 @@ class OrderController extends Controller
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
                         ]);
+                        if (isset($item->addon_ids) && !empty($item->addon_ids)) {
+                            $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
+                            $addon_order_items = AddonOrderItems::where('order_item_id', $order_items['id'])->delete();
+                            foreach ($request->$item->addon_ids as $addon_id) {
+                                $order_addon_items = AddonOrderItems::create([
+                                    'order_item_id' => $order_items['id'],
+                                    'addon_id' => $addon_id,
+                                ]);
+                            }
+                        }
                     } else {
                         $order_items = OrderItems::create([
                             'product_id' => $item['product_id'],
@@ -151,6 +160,15 @@ class OrderController extends Controller
                             'quantity' => $item['quantity'],
                             'order_id' => $order_id,
                         ]);
+                        if (isset($item->addon_ids) && !empty($item->addon_ids)) {
+                            $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
+                            foreach ($request->$item->addon_ids as $addon_id) {
+                                $order_addon_items = AddonOrderItems::create([
+                                    'order_item_id' => $order_items['id'],
+                                    'addon_id' => $addon_id,
+                                ]);
+                            }
+                        }
                     }
                 }
                 
