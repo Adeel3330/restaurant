@@ -105,7 +105,7 @@ class OrderController extends Controller
             $order = $carts->first();
             $order_id = $order['id'];
             foreach ($request->items as $item) {
-                if (isset($item->addon_ids) && !empty($item->addon_ids)) {
+                if (isset($item['addon_ids']) && !empty($item['addon_ids'])) {
                     $count = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->count();
                     if ($count > 0) {
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
@@ -113,7 +113,7 @@ class OrderController extends Controller
                             'quantity' => $item['quantity'],
                         ]);
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
-                        foreach($request->$item->addon_ids as $addon_id){
+                        foreach($item['addon_ids'] as $addon_id){
                             $addon_order_items = AddonOrderItems::where('order_item_id',$order_items['id'])->delete();
                             $order_addon_items = AddonOrderItems::create([
                                 'order_item_id'=>$order_items['id'],
@@ -124,13 +124,12 @@ class OrderController extends Controller
                     } else {
                         $order_items = OrderItems::create([
                             'product_id' => $item['product_id'],
-                            'addon_id' => $item['addon_id'],
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
                             'order_id' => $order_id,
                         ]);
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
-                        foreach ($request->$item->addon_ids as $addon_id) {
+                        foreach ($item['addon_ids'] as $addon_id) {
                             $order_addon_items = AddonOrderItems::create([
                                 'order_item_id' => $order_items['id'],
                                 'addon_id' => $addon_id,
@@ -144,10 +143,10 @@ class OrderController extends Controller
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
                         ]);
-                        if (isset($item->addon_ids) && !empty($item->addon_ids)) {
+                        if (isset($item['addon_ids']) && !empty($item['addon_ids'])) {
                             $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
                             $addon_order_items = AddonOrderItems::where('order_item_id', $order_items['id'])->delete();
-                            foreach ($request->$item->addon_ids as $addon_id) {
+                            foreach ($item['addon_ids'] as $addon_id) {
                                 $order_addon_items = AddonOrderItems::create([
                                     'order_item_id' => $order_items['id'],
                                     'addon_id' => $addon_id,
@@ -161,9 +160,9 @@ class OrderController extends Controller
                             'quantity' => $item['quantity'],
                             'order_id' => $order_id,
                         ]);
-                        if (isset($item->addon_ids) && !empty($item->addon_ids)) {
+                        if (isset($item['addon_ids']) && !empty($item['addon_ids'])) {
                             $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
-                            foreach ($request->$item->addon_ids as $addon_id) {
+                            foreach ($item['addon_ids'] as $addon_id) {
                                 $order_addon_items = AddonOrderItems::create([
                                     'order_item_id' => $order_items['id'],
                                     'addon_id' => $addon_id,
@@ -197,7 +196,7 @@ class OrderController extends Controller
         $orderscreate->address = $request->address;
         $orderscreate->save();
         foreach ($request->items as $key => $item) {
-            
+            // dd($item['addon_ids']);
             $order = Orders::where('user_id', $sid)->where('status', 'Accepting order')->orderBy('created_at', 'desc')->first();
             $order_id = $order['id'];
             $order_items = new OrderItems;
@@ -207,9 +206,10 @@ class OrderController extends Controller
             $order_items->payment = $item['payment'];
             $order_items->quantity = $item['quantity'];
             $res = $order_items->save();
-            if(isset($item->addon_ids) && !empty($item->addon_ids)){
+            if(isset($item['addon_ids']) && !empty($item['addon_ids'])){
                 $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
-                foreach ($request->$item->addon_ids as $addon_id) {
+            //    dd($order_items);
+                foreach ($item['addon_ids'] as $addon_id) {
                     $order_addon_items = AddonOrderItems::create([
                         'order_item_id' => $order_items['id'],
                         'addon_id' => $addon_id,
