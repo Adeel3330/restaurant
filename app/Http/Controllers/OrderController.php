@@ -61,6 +61,7 @@ class OrderController extends Controller
             $carts->quantity = $request->quantity;
             $carts->status = "Active";
             if ($carts->save()) {
+                $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id);
                 $carts_app = $carts->first();
                 $cart_id = $carts_app['id'];
                 if (isset($request->addon_ids) && !empty($request->addon_ids)) {
