@@ -42,7 +42,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Price</label>
-                                        <input type="number" name="price" required class="form-control" placeholder="Enter Addon description">
+                                        <input type="number" name="price" required class="form-control" placeholder="Enter Addon Price">
                                     </div>
                                 </div>
                             </div>
