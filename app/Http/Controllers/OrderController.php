@@ -32,7 +32,8 @@ class OrderController extends Controller
         $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id);
     if ($carts->count() > 0) {
             $carts_update = $carts->update([
-                'quantity' => $request->quantity
+                'quantity' => $request->quantity,
+                'special_instruction'=>isset($request->special_instruction) ? $request->special_instruction:'',
             ]);
             if ($carts_update) {
                 $carts_app = $carts->first();
@@ -59,6 +60,7 @@ class OrderController extends Controller
             $carts->user_id = $sid;
             $carts->product_id = $request->product_id;
             $carts->quantity = $request->quantity;
+            $carts->special_instruction = isset($request->special_instruction) ? $request->special_instruction:'';
             $carts->status = "Active";
             if ($carts->save()) {
                 $carts = AddtoCarts::where('status', 'Active')->where('user_id', $sid)->where('product_id', $request->product_id);
@@ -111,6 +113,7 @@ class OrderController extends Controller
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
+                            'special_instruction' => isset($item['special_instruction']) ? $item['special_instruction'] : '',
                         ]);
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
                         foreach($item['addon_ids'] as $addon_id){
@@ -127,6 +130,7 @@ class OrderController extends Controller
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
                             'order_id' => $order_id,
+                            'special_instruction' => isset($item['special_instruction']) ? $item['special_instruction'] : '',
                         ]);
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
                         foreach ($item['addon_ids'] as $addon_id) {
@@ -142,6 +146,7 @@ class OrderController extends Controller
                         $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->update([
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
+                            'special_instruction' => isset($item['special_instruction']) ? $item['special_instruction'] : '',
                         ]);
                         if (isset($item['addon_ids']) && !empty($item['addon_ids'])) {
                             $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
@@ -159,6 +164,7 @@ class OrderController extends Controller
                             'payment' => $item['payment'],
                             'quantity' => $item['quantity'],
                             'order_id' => $order_id,
+                            'special_instruction' => isset($item['special_instruction']) ? $item['special_instruction'] : '',
                         ]);
                         if (isset($item['addon_ids']) && !empty($item['addon_ids'])) {
                             $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
@@ -205,6 +211,7 @@ class OrderController extends Controller
            
             $order_items->payment = $item['payment'];
             $order_items->quantity = $item['quantity'];
+            $order_items->special_instruction = isset($item['special_instruction']) ? $item['special_instruction'] : '';
             $res = $order_items->save();
             if(isset($item['addon_ids']) && !empty($item['addon_ids'])){
                 $order_items = OrderItems::where('order_id', $order_id)->where('product_id', $item['product_id'])->first();
