@@ -129,7 +129,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="javascript:void(0);" data-toggle="collapse" data-target="#addon_sub_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Addon Sub Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="addon_sub_cate_dr" class="collapse collapse-level-1">
                         <li>
@@ -139,7 +139,7 @@
                             <a href="/admin/addon-sub-category-create">Addon Sub Category Create</a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <li>
                     <a href="javascript:void(0);" data-toggle="collapse" data-target="#products_dr"><i class="fa fa-product-hunt mr-10"></i>Products<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="products_dr" class="collapse collapse-level-1">
