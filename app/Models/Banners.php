@@ -14,6 +14,11 @@ class Banners extends Model
         // body...
         return $this->belongsTo(Restaurants::class);
     }
+    public function category()
+    {
+        // body...
+        return $this->belongsTo(Categories::class);
+    }
 
     protected $fillable = [
         'image',

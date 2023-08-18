@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Banners;
+use App\Models\Categories;
 use App\Models\Restaurants;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -15,7 +16,8 @@ class BannerControllerWeb extends Controller
     {
         $validator = Validator::make($request->all(), [
             'image' => ['required', Rule::imageFile()],
-            'restaurant_ids' => 'required'
+            'restaurant_id' => 'required',
+            'category_id' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -27,13 +29,14 @@ class BannerControllerWeb extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/banner/' . $_FILES['image']['name'])) {
-                    foreach ($request->restaurant_ids as $restaurant_id) {
+                    // foreach ($request->restaurant_ids as $restaurant_id) {
                         $banner = new Banners();
-                        $banner->restaurant_id = $restaurant_id;
+                        $banner->restaurant_id = $request->restaurant_id;
+                        $banner->category_id = $request->category_id;
                         $banner->image = $_FILES['image']['name'];
                         $banner->status = "Active";
                         $result = $banner->save();
-                    }
+                    // }
                     if ($result) {
                         return response()->json([
                             "message" => "Banner created successfully"
@@ -76,11 +79,11 @@ class BannerControllerWeb extends Controller
     public function banners($id = null)
     {
         if (!$id) {
-            $banners = Banners::with('restaurant')->where('status', 'Active')->get();
+            $banners = Banners::with('restaurant','category')->where('status', 'Active')->get();
             return view('admin.banners',compact('banners'));
             
         } else {
-            $banner = Banners::with('restaurant')->where('status', 'Active')->where('id', $id)->get();
+            $banner = Banners::with('restaurant','category')->where('status', 'Active')->where('id', $id)->get();
             return view('admin.banners', compact('banner'));
            
         }
@@ -94,11 +97,13 @@ class BannerControllerWeb extends Controller
             if (isset($_FILES['image']['name']) && !empty($_FILES['image']['name'])) {
                 $validator = Validator::make($request->all(), [
                     'restaurant_id' => ['required'],
+                    'category_id' => ['required'],
                     'image' => ['required', Rule::imageFile()],
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
                     'restaurant_id' => ['required'],
+                    'category_id' => ['required'],
                 ]);
             }
 
@@ -115,6 +120,7 @@ class BannerControllerWeb extends Controller
                     if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/banner/' . $_FILES['image']['name'])) {
                         $category = Banners::where('id', $id)->update([
                             'restaurant_id' => $request->restaurant_id,
+                            'category_id' => $request->category_id,
                             'image' => $_FILES['image']['name']
                         ]);
                         if ($category) {
@@ -133,7 +139,8 @@ class BannerControllerWeb extends Controller
                     }
                 } else {
                     $category = Banners::where('id', $id)->update([
-                        'restaurant_id' => $request->restaurant_id
+                        'restaurant_id' => $request->restaurant_id,
+                        'category_id' => $request->category_id,
                     ]);
                     if ($category) {
                         return response()->json([
@@ -154,8 +161,9 @@ class BannerControllerWeb extends Controller
     }
 
     public function banner_create_view(){
-        $restaurants = Restaurants::where('status','Active')->get();
-        return view('admin.banner-create',compact('restaurants'));
+        $restaurants = Restaurants::where('status', 'Active')->get();
+        $categories = Categories::where('status','Active')->get();
+        return view('admin.banner-create',compact('restaurants', 'categories'));
     }
 
     public function banner_edit($id)
@@ -164,12 +172,29 @@ class BannerControllerWeb extends Controller
         if($banner->count() > 0){
             $banner = $banner->first();
             $restaurants = Restaurants::where('status','Active')->get();
+            $categories = Categories::where('restaurant_id',$banner->restaurant_id)->where('status','Active')->get();
             // $banner['restaurants'] = $restaurants;
-            return view('admin.banner-edit',compact('banner','restaurants'));
+            return view('admin.banner-edit',compact('banner','restaurants','categories'));
         }
         else
         {
             return redirect('/admin/banners');
         }
+    }
+    public function get_categories_with_id($id){
+        $html = '';
+        $categories = Categories::where('restaurant_id',$id);
+        if($categories->count() > 0){
+            $categories = $categories->get();
+            foreach($categories as $category){
+                $html .="<option value=".$category->id.">".$category->name."</option>";
+            } 
+            
+        }
+        else{
+            $html .= "<option value=''>No Category Found</option>";
+        }
+        return $html;
+
     }
 }

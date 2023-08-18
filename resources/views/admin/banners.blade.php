@@ -22,6 +22,7 @@
                                         <th>ID #</th>
                                         <th>Restaurant</th>
                                         <th>Image</th>
+                                        <th>Category</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -30,6 +31,7 @@
                                         <th>ID #</th>
                                         <th>Restaurant</th>
                                         <th>Image</th>
+                                        <th>Category</th>
                                         <th>Actions</th>
                                     </tr>
                                 </tfoot>
@@ -39,6 +41,7 @@
                                         <td>{{ $banner->id }}</td>
                                         <td>{{ $banner->restaurant->name }}</td>
                                         <td><img class="img-circle" height="80" src="{{ (isset($_SERVER['https']) && $_SERVER['https'] !== 'off') ?  $_SERVER['DOCUMENT_ROOT'] . '/image/banner/' .$banner->image : url('/image/banner/'.$banner->image) }}" width="80" /></td>
+                                        <td>{{ $banner->category ? $banner->category->name : '' }}</td>
                                         <td><a href="/admin/banner-edit/{{$banner->id}}" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="fa fa-check"></i></a> <a href="javascript:void(0)" onclick="deleteItem('<?php echo $banner->id ?>' ,'/admin/delete_banner','Banner')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash"></i></a></td>
                                     </tr>
 

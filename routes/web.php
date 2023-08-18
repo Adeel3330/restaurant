@@ -82,6 +82,7 @@ Route::middleware('AdminWebLogin')->controller(BannerControllerWeb::class)->grou
     Route::get('/admin/banners', 'banners');
     Route::get('/admin/banners/{id}', 'banners');
     Route::get('/admin/banner-edit/{id}','banner_edit');
+    Route::get('/admin/get_categories_with_id/{id}', 'get_categories_with_id');
 });
 
 Route::middleware('AdminWebLogin')->controller(SubcategoryControllerWeb::class)->group(function () {

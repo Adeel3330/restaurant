@@ -18,12 +18,21 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Restaurants</label>
-                                        <select name="restaurant_ids[]" multiple class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
+                                        <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" id="restaurant_id">
                                             @forelse ($restaurants as $restaurant)
                                             <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
                                             @empty
                                             <option value="">No Restaurant found</option>
                                             @endforelse
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label mb-10">Categories</label>
+                                        <select name="category_id" id="category_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" required>
+
 
                                         </select>
                                     </div>
@@ -90,23 +99,59 @@
             error: function(data) {
                 console.log(data.status)
                 // if (data.status == 302) {
-                    $("#spinner").hide();
-                    $("#updatebtn").text("");
-                    $("#updatebtn").append("<i class='fa fa-check'></i>Save")
-                    var array = $.map(data.responseJSON, function(value, index) {
-                        return [value];
-                    });
-                    array.forEach(element => {
-                        // element.forEach(data => {
-                        console.log(element)
-                        popup(element);
-                        // });
-                    });
+                $("#spinner").hide();
+                $("#updatebtn").text("");
+                $("#updatebtn").append("<i class='fa fa-check'></i>Save")
+                var array = $.map(data.responseJSON, function(value, index) {
+                    return [value];
+                });
+                array.forEach(element => {
+                    // element.forEach(data => {
+                    console.log(element)
+                    popup(element);
+                    // });
+                });
                 // }
 
             }
         });
     });
+
+    $("#restaurant_id").on("change", function() {
+        var id = $(this).val();
+        getParent(id)
+    })
+
+    function getParent(r_id) {
+        var token = $("input[name='token']").val();
+        console.log(token);
+        $("#category_id").html("");
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': token
+            },
+            url: "/admin/get_categories_with_id/" + r_id,
+            method: "GET",
+            success: function(data) {
+                console.log(data)
+                $("#category_id").append(data);
+                // $("#category_id").trigger("change");
+                $('#category_id').selectpicker('refresh');
+            },
+            error: function(data) {
+                var array = $.map(data.responseJSON, function(value, index) {
+                    return [value];
+                });
+                array.forEach(element => {
+                    // element.forEach(data => {
+                    console.log(element)
+                    popup(element);
+                    // });
+                });
+            }
+
+        })
+    }
 </script>
 
 
