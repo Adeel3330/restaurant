@@ -117,7 +117,6 @@ class ProductControllerWeb extends Controller
             if (isset($_FILES['image']['name']) && !empty($_FILES['image']['name'])) {
                 $validator = Validator::make($request->all(), [
                     'category_id' => ['required'],
-                    
                     'name' => ['required'],
                     'restaurant_id' => 'required',
                     'image' => ['required', Rule::imageFile()],
