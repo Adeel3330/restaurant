@@ -22,7 +22,7 @@
                                         <th>ID #</th>
                                         <th>Name</th>
                                         <th>Restaurant</th>
-                                        <th>Image</th>
+                                        <!-- <th>Image</th> -->
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -31,7 +31,7 @@
                                         <th>ID #</th>
                                         <th>Name</th>
                                         <th>Restaurant</th>
-                                        <th>Image</th>
+                                        <!-- <th>Image</th> -->
                                         <th>Actions</th>
                                     </tr>
                                 </tfoot>
@@ -41,7 +41,7 @@
                                         <td>{{ $addon_category->id }}</td>
                                         <td>{{ $addon_category->name }}</td>
                                         <td>{{ $addon_category->restaurant->name }}</td>
-                                        <td><img class="img-circle" height="80" src="{{ (isset($_SERVER['https']) && $_SERVER['https'] !== 'off') ?  $_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' .$addon_category->image : url('/image/addon_category/'.$addon_category->image) }}" width="80" /></td>
+                                        <!-- <td><img class="img-circle" height="80" src="{{ (isset($_SERVER['https']) && $_SERVER['https'] !== 'off') ?  $_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' .$addon_category->image : url('/image/addon_category/'.$addon_category->image) }}" width="80" /></td> -->
                                         <td><a href="/admin/addon-category-edit/{{$addon_category->id}}" class="text-inverse p-r-10" data-toggle="tooltip" title="" data-original-title="Edit"><i class="fa fa-check"></i></a> <a href="javascript:void(0)" onclick="deleteItem('<?php echo $addon_category->id ?>' ,'/admin/delete_addon_category','Addon_category')" class="text-inverse" title="" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash"></i></a></td>
                                     </tr>
 

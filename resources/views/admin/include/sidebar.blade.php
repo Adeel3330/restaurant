@@ -118,7 +118,7 @@
                         </li>
                     </ul>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="javascript:void(0);" data-toggle="collapse" data-target="#sub_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Sub Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="sub_cate_dr" class="collapse collapse-level-1">
                         <li>
@@ -128,7 +128,7 @@
                             <a href="/admin/sub-category-create">Sub Category Create</a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <!-- <li>
                     <a href="javascript:void(0);" data-toggle="collapse" data-target="#addon_sub_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Addon Sub Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="addon_sub_cate_dr" class="collapse collapse-level-1">
@@ -193,14 +193,14 @@
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#owner_dr"><i class="fa fa-users mr-10"></i>Owner<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                <li style="margin-bottom: 3rem;">
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#owner_dr"><i class="fa fa-users mr-10"></i>Restaurant<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="owner_dr" class="collapse collapse-level-1">
                         <li>
-                            <a href="/admin/owners">Owners</a>
+                            <a href="/admin/owners">Restaurant</a>
                         </li>
                         <li>
-                            <a href="/admin/owner-create">Owner Create</a>
+                            <a href="/admin/owner-create">Restaurant Create</a>
                         </li>
                     </ul>
                 </li>

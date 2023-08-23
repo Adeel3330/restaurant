@@ -37,19 +37,7 @@
                                 <!--/span-->
                             </div>
                             <div class="row mt-10">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Sub Categories</label>
-                                        <select name="sub_category_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
-                                            @forelse ($sub_categories as $sub_category)
-                                            <option value="{{ $sub_category->id }}" {{ $product->sub_category_id == $sub_category->id ? "selected":"" }}>{{ $sub_category->name }}</option>
-                                            @empty
-                                            <option value="">No Sub Category found</option>
-                                            @endforelse
 
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Restaurants</label>
@@ -63,14 +51,6 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Description</label>
-                                        <textarea name="description" required cols="80" rows="4" class="form-control" placeholder="Enter product description">{{ $product->description }}</textarea>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Price</label>
@@ -81,22 +61,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label mb-10">Flavours</label>
-                                        <select name="flavour_ids[]" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" multiple>
-                                            @forelse ($flavours as $flavour)
-                                            <option value="{{ $flavour->id }}" @foreach($product->flavour_ids as $flavour_id)
-                                                {{$flavour_id->flavour_id == $flavour->id ? "selected":"" }}
-                                                @endforeach
-                                                >{{ $flavour->name }}
-                                            </option>
-                                            @empty
-                                            <option value="">No flavour found</option>
-                                            @endforelse
-
-                                        </select>
+                                        <label class="control-label mb-10">Description</label>
+                                        <textarea name="description" required cols="80" rows="4" class="form-control" placeholder="Enter product description">{{ $product->description }}</textarea>
                                     </div>
                                 </div>
+
                             </div>
+
                             <div class="seprator-block"></div>
                             <h6 class="txt-dark capitalize-font"><i class="icon-picture mr-10"></i>upload image</h6>
                             <hr>

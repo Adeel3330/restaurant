@@ -37,7 +37,7 @@
                                 <!--/span-->
                             </div>
                             <div class="seprator-block"></div>
-                            <h6 class="txt-dark capitalize-font"><i class="icon-picture mr-10"></i>upload image</h6>
+                            <!-- <h6 class="txt-dark capitalize-font"><i class="icon-picture mr-10"></i>upload image</h6>
                             <hr>
                             <div class="row">
                                 <div class="col-lg-12">
@@ -45,14 +45,14 @@
                                         <div id="imagePreview">
                                             <img src="{{ url('/image/addon_category/'.$addon_category->image) }}" width="80">
                                         </div>
-                                        <!-- <img class="img-responsive" src="dist/img/chair.jpg" alt="upload_img"> -->
+                                        <img class="img-responsive" src="dist/img/chair.jpg" alt="upload_img">
                                     </div>
                                     <div class="fileupload btn btn-info btn-anim"><i class="fa fa-upload"></i><span class="btn-text">Upload new image</span>
                                         <input type="file" class="upload" name="image" id="uploadFile" accept="image/*">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="seprator-block"></div>
+                            </div> -->
+                            <!-- <div class="seprator-block"></div> -->
                             <div class="form-actions">
                                 <button class="btn btn-success btn-icon left-icon mr-10" id="updatebtn"> <i class="fa fa-check"></i> <span>save</span></button>
                                 <button type="button" class="btn btn-warning" onclick="window.location.assign('/admin/categories')">Cancel</button>

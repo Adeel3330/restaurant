@@ -18,24 +18,24 @@ class AddonCategoryControllerWeb extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required', Rule::unique('addon_categories')->where('status', 'Active')],
-            'image' => ['required', Rule::imageFile()],
+            // 'image' => ['required', Rule::imageFile()],
             'restaurant_ids' => 'required'
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         } else {
-            if ($_FILES['image']['size'] > 2000000) {
-                return response()->json([
-                    "message" => "Max file size is 2mb"
-                ], 302);
-            } else {
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' . $_FILES['image']['name'])) {
+            // if ($_FILES['image']['size'] > 2000000) {
+            //     return response()->json([
+            //         "message" => "Max file size is 2mb"
+            //     ], 302);
+            // } else {
+                // if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' . $_FILES['image']['name'])) {
                     foreach ($request->restaurant_ids as $restaurant_id) {
                         $addon_category = new AddonCategory();
                         $addon_category->name = $request->name;
                         $addon_category->restaurant_id = $restaurant_id;
-                        $addon_category->image = $_FILES['image']['name'];
+                        // $addon_category->image = $_FILES['image']['name'];
                         $addon_category->status = "Active";
                         $result = $addon_category->save();
                     }
@@ -49,12 +49,12 @@ class AddonCategoryControllerWeb extends Controller
                             "message" => "Something went wrong"
                         ], 302);
                     }
-                } else {
-                    return response()->json([
-                        "message" => "File not move try again!"
-                    ], 302);
-                }
-            }
+                // } else {
+                //     return response()->json([
+                //         "message" => "File not move try again!"
+                //     ], 302);
+                // }
+            // }
         }
     }
 
@@ -98,18 +98,10 @@ class AddonCategoryControllerWeb extends Controller
     public function edit_addon_category(Request $request, $id)
     {
         if (AddonCategory::where('status', 'Active')->where('id', $id)->count() > 0) {
-            if (isset($_FILES['image']['name']) && !empty($_FILES['image']['name'])) {
-                $validator = Validator::make($request->all(), [
-                    'name' => ['required'],
-                    'image' => ['required', Rule::imageFile()],
-                    'restaurant_id' => 'required'
-                ]);
-            } else {
-                $validator = Validator::make($request->all(), [
+           $validator = Validator::make($request->all(), [
                     'name' => ['required'],
                     'restaurant_id' => 'required'
                 ]);
-            }
             //  dd(Addon_categories::where('status', 'Active')->where('id', '!=', $id)->count());  
             if (AddonCategory::where('status', 'Active')->where('id', '!=', $id)->where('name', 'LIKE', $request->name)->count() > 0) {
                 return response()->json([
@@ -119,18 +111,13 @@ class AddonCategoryControllerWeb extends Controller
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 302);
             } else {
-                if (isset($_FILES['image']['name']) && !empty($_FILES['image']['name'])) {
-                    if ($_FILES['image']['size'] > 2000000) {
-                        return response()->json([
-                            "message" => "Max file size is 2mb"
-                        ], 302);
-                    }
+                
                     // unlink($_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' .  Addon_categories::where('id', $id)->first()->image);
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' . $_FILES['image']['name'])) {
+                    // if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/addon_category/' . $_FILES['image']['name'])) {
                         $addon_category = AddonCategory::where('id', $id)->update([
                             'name' => $request->name,
                             'restaurant_id' => $request->restaurant_id,
-                            'image' => $_FILES['image']['name']
+                           
                         ]);
                         if ($addon_category) {
                             return response()->json([
@@ -141,26 +128,6 @@ class AddonCategoryControllerWeb extends Controller
                                 "message" => "Something went wrong"
                             ], 302);
                         }
-                    } else {
-                        return response()->json([
-                            "message" => "File not move try again!"
-                        ], 302);
-                    }
-                } else {
-                    $addon_category = AddonCategory::where('id', $id)->update([
-                        'name' => $request->name,
-                        'restaurant_id' => $request->restaurant_id
-                    ]);
-                    if ($addon_category) {
-                        return response()->json([
-                            "message" => "Addon category updated successfully"
-                        ], 200);
-                    } else {
-                        return response()->json([
-                            "message" => "Something went wrong"
-                        ], 302);
-                    }
-                }
             }
         } else {
             return response()->json([
