@@ -69,7 +69,7 @@
 
 
                                                         <div class="form-group">
-                                                            <button type="submit" class="btn btn-success btn-block">sign in</button>
+                                                            <button id="updatebtn" type=" submit" class="btn btn-success btn-block">sign in</button>
                                                         </div>
                                                         <div class="form-group mb-0">
 
@@ -135,10 +135,18 @@
                 },
                 error: function(data) {
                     console.log(data.status)
-                    if (data.status == 302) {
-                        console.log(data.responseJSON.message);
-                        popup(data.responseJSON.message);
-                    }
+                    $("#spinner").hide();
+                    $("#updatebtn").text("");
+                    $("#updatebtn").append("<i class='fa fa-check'></i>Save")
+                    var array = $.map(data.responseJSON, function(value, index) {
+                        return [value];
+                    });
+                    array.forEach(element => {
+                        // element.forEach(data => {
+                        console.log(element)
+                        popup(element);
+                        // });
+                    });
 
                 }
             });

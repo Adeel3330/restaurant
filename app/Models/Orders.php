@@ -24,33 +24,6 @@ class Orders extends Model
         return $this->belongsTo(Restaurants::class);
     }
 
-    public function getCreatedAtAttribute($value)
-    {
-        // Convert the 'created_at' timestamp to a Carbon instance
-        $createdAt = Carbon::parse($value);
-
-        // Add 2 hours to the 'created_at' timestamp
-        $createdAt->addHours(2);
-
-        // Return the modified timestamp
-        return $createdAt;
-    }
-
-    protected function createdAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => $this->getCreatedAtAttribute($value),
-            set: fn (string $value) => $value,
-        );
-    }
-
-    protected function updatedAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn (string $value) => $this->getCreatedAtAttribute($value),
-            set: fn (string $value) => $value,
-        );
-    }
     
     protected $fillable = [
         'user_id',
