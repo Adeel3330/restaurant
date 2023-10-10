@@ -21,7 +21,7 @@
                                         <input class="form-control" name="name" value="{{ $category->name }}" required type="text" placeholder="Enter Category name">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <!-- <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Restaurants</label>
                                         <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
@@ -33,7 +33,7 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!--/span-->
                             </div>
                             <div class="seprator-block"></div>

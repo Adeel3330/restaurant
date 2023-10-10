@@ -16,7 +16,7 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required',Rule::unique('categories')->where('status','Active')],
             'image' => ['required', Rule::imageFile()],
-            'restaurant_id'=>'required'
+            // 'restaurant_id'=>'required'
         ]);
 
         if ($validator->fails()) {
@@ -32,7 +32,7 @@ class CategoryController extends Controller
                 if(move_uploaded_file($_FILES['image']['tmp_name'],$_SERVER['DOCUMENT_ROOT'].'/image/category/'. $_FILES['image']['name'])){
                     $category = new Categories();
                     $category->name = $request->name;
-                    $category->restaurant_id = $request->restaurant_id;
+                    // $category->restaurant_id = $request->restaurant_id;
                     $category->image = $_FILES['image']['name'];
                     $category->status = "Active";
                     if($category->save()){
@@ -96,7 +96,7 @@ class CategoryController extends Controller
     public function categories($id = null)
     {
         if(!$id){
-            $category = Categories::with('restaurant')->where('status','Active');
+            $category = Categories::where('status','Active');
             if($category->count() > 0){
                 
                 return response()->json(
@@ -111,7 +111,7 @@ class CategoryController extends Controller
             }
         }
         else{
-            $category = Categories::with('restaurant')->where('status', 'Active')->where('id',$id);
+            $category = Categories::where('status', 'Active')->where('id',$id);
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -134,14 +134,14 @@ class CategoryController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => ['required'],
                 'image' => ['required', Rule::imageFile()],
-                'restaurant_id'=>'required'
+                // 'restaurant_id'=>'required'
             ]);
         }
         else
         {
                 $validator = Validator::make($request->all(), [
                     'name' => ['required'],
-                    'restaurant_id'=>'required'
+                    // 'restaurant_id'=>'required'
                 ]);
         }
         //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -163,7 +163,7 @@ class CategoryController extends Controller
                     if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].'/image/category/' . $_FILES['image']['name'])) {
                         $category = Categories::where('id',$id)->update([
                             'name'=>$request->name,
-                            'restaurant_id'=>$request->restaurant_id,
+                            // 'restaurant_id'=>$request->restaurant_id,
                             'image'=>$_FILES['image']['name']
                         ]);
                         if ($category) {
@@ -185,7 +185,7 @@ class CategoryController extends Controller
                 {
                     $category = Categories::where('id', $id)->update([
                         'name' => $request->name,
-                        'restaurant_id'=>$request->restaurant_id
+                        // 'restaurant_id'=>$request->restaurant_id
                     ]);
                     if ($category) {
                         return response()->json([

@@ -14,7 +14,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             // 'sub_category_id' => 'required',
-            'restaurant_id'=>'required',
+            // 'restaurant_id'=>'required',
             'name' => ['required', Rule::unique('products')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
             'price' => 'required',
@@ -33,7 +33,7 @@ class ProductController extends Controller
                     $category = new Products();
                     $category->name = $request->name;
                     $category->category_id = $request->category_id;
-                    $category->restaurant_id = $request->restaurant_id;
+                    // $category->restaurant_id = $request->restaurant_id;
                     // $category->sub_category_id = $request->sub_category_id;
                     $category->image = $_FILES['image']['name'];
                     $category->description = $request->description;
@@ -91,7 +91,7 @@ class ProductController extends Controller
             if ($category->count() > 0) {
 
                 return response()->json(
-                    $category->with('category')->with('restaurant')->get(),
+                    $category->with('category')->get(),
                     200
                 );
             } else {
@@ -100,7 +100,7 @@ class ProductController extends Controller
                 ], 302);
             }
         } else {
-            $category = Products::with('category','restaurant')->where('status', 'Active')->where('id', $id);
+            $category = Products::with('category')->where('status', 'Active')->where('id', $id);
             if ($category->count() > 0) {
 
                 return response()->json(
@@ -125,7 +125,7 @@ class ProductController extends Controller
                     'category_id' => ['required'],
                     // 'sub_category_id'=>'required',
                     'name' => ['required'],
-                    'restaurant_id'=>'required',
+                    // 'restaurant_id'=>'required',
                     'image' => ['required', Rule::imageFile()],
                     'description'=>'required',
                     'price'=>'required'
@@ -138,7 +138,7 @@ class ProductController extends Controller
                     // 'sub_category_id' => 'required',
                     'description' => 'required',
                     'price' => 'required',
-                    'restaurant_id'=>'required'
+                    // 'restaurant_id'=>'required'
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -162,7 +162,7 @@ class ProductController extends Controller
                             'name' => $request->name,
                             'category_id' => $request->category_id,
                             // 'sub_category_id' => $request->sub_category_id,
-                            'restaurant_id'=>$request->restaurant_id,
+                            // 'restaurant_id'=>$request->restaurant_id,
                             'price'=>$request->price,
                             'image' => $_FILES['image']['name'],
                             'description'=>$request->description,
@@ -189,7 +189,7 @@ class ProductController extends Controller
                         // 'sub_category_id' => $request->sub_category_id,
                         'description' => $request->description,
                         'price' => $request->price,
-                        'restaurant_id'=>$request->restaurant_id,
+                        // 'restaurant_id'=>$request->restaurant_id,
                     ]);
                     if ($category) {
                         return response()->json([
@@ -219,9 +219,9 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         } 
-        $products = Products::where('restaurant_id',$request->id)->where('name','LIKE','%'.$request->search."%");
+        $products = Products::where('name','LIKE','%'.$request->search."%");
         if($products->count() > 0){
-            return response()->json($products->with('restaurant','category')->get(), 200);
+            return response()->json($products->with('category')->get(), 200);
         }
         else
         {

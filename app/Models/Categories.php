@@ -9,11 +9,11 @@ class Categories extends Model
 {
     use HasFactory;
 
-    public function restaurant()
-    {
-        // body...
-        return $this->belongsTo(Restaurants::class);
-    }
+    // public function restaurant()
+    // {
+    //     // body...
+    //     return $this->belongsTo(Restaurants::class);
+    // }
     protected $fillable = [
         'name',
         'image',

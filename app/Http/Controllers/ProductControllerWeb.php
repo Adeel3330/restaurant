@@ -19,8 +19,8 @@ class ProductControllerWeb extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             
-            'restaurant_ids' => 'required',
-            'name' => ['required', Rule::unique('products')->where('restaurant_id',$request->restaurant_id)->where('status', 'Active')],
+            // 'restaurant_ids' => 'required',
+            'name' => ['required', Rule::unique('products')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
             'price' => 'required',
             'description' => 'required',
@@ -36,12 +36,12 @@ class ProductControllerWeb extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/product/' . $_FILES['image']['name'])) {
-                    foreach ($request->restaurant_ids as $restaurant_id) {
+                    // foreach ($request->restaurant_ids as $restaurant_id) {
                     
                     $category = new Products();
                     $category->name = $request->name;
                     $category->category_id = $request->category_id;
-                    $category->restaurant_id = $restaurant_id;
+                    // $category->restaurant_id = $restaurant_id;
                 
                     $category->image = $_FILES['image']['name'];
                     $category->description = $request->description;
@@ -55,7 +55,7 @@ class ProductControllerWeb extends Controller
                     //             'flavour_id' => $flavour,
                     //         ]);
                     //     }
-                    }
+                    // }
                     if ($result) {
                         
                         return response()->json([
@@ -118,7 +118,7 @@ class ProductControllerWeb extends Controller
                 $validator = Validator::make($request->all(), [
                     'category_id' => ['required'],
                     'name' => ['required'],
-                    'restaurant_id' => 'required',
+                    // 'restaurant_id' => 'required',
                     'image' => ['required', Rule::imageFile()],
                     'description' => 'required',
                     'price' => 'required',
@@ -132,7 +132,7 @@ class ProductControllerWeb extends Controller
                    
                     'description' => 'required',
                     'price' => 'required',
-                    'restaurant_id' => 'required',
+                    // 'restaurant_id' => 'required',
              
                 ]);
             }
@@ -157,7 +157,7 @@ class ProductControllerWeb extends Controller
                             'name' => $request->name,
                             'category_id' => $request->category_id,
                            
-                            'restaurant_id' => $request->restaurant_id,
+                            // 'restaurant_id' => $request->restaurant_id,
                             'price' => $request->price,
                             'image' => $_FILES['image']['name'],
                             'description' => $request->description,
@@ -192,7 +192,7 @@ class ProductControllerWeb extends Controller
                       
                         'description' => $request->description,
                         'price' => $request->price,
-                        'restaurant_id' => $request->restaurant_id,
+                        // 'restaurant_id' => $request->restaurant_id,
                     ]);
                     if ($category) {
                         // $flavour = FlavourProducts::where('product_id', $id)->delete();
@@ -229,9 +229,9 @@ class ProductControllerWeb extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         }
-        $products = Products::where('restaurant_id', $request->id)->where('name', 'LIKE', '%' . $request->search . "%");
+        $products = Products::where('name', 'LIKE', '%' . $request->search . "%");
         if ($products->count() > 0) {
-            return response()->json($products->with('restaurant', 'category')->get(), 200);
+            return response()->json($products->with('category')->get(), 200);
         } else {
             return response()->json([
                 "message" => "No record Found"
@@ -240,21 +240,21 @@ class ProductControllerWeb extends Controller
     }
 
     public function product_create_view(){
-        $restaurants = Restaurants::where('status','Active')->get();
+        // $restaurants = Restaurants::where('status','Active')->get();
         $categories =Categories::where('status', 'Active')->get();
         // $sub_categories = SubCategories::where('status', 'Active')->get();
         // $flavours = ProductFlavours::where('status', 'Active')->get();
-        return view('admin.product-create',compact('restaurants','categories'));
+        return view('admin.product-create',compact('categories'));
     }
     
 
     public function product_edit_view($id)
     {
-        $restaurants = Restaurants::where('status', 'Active')->get();
+        // $restaurants = Restaurants::where('status', 'Active')->get();
         $categories = Categories::where('status', 'Active')->get();
         // $sub_categories = SubCategories::where('status', 'Active')->get();
         // $flavours = ProductFlavours::where('status', 'Active')->get();
-        $products = Products::where('status','Active')->where('id',$id)->with('restaurant', 'category');
+        $products = Products::where('status','Active')->where('id',$id)->with('category');
         if($products->count() <= 0) return redirect('/admin/products');
         $product = $products->first();
         return view('admin.product-edit', compact('restaurants', 'categories','product'));

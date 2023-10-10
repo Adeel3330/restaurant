@@ -18,7 +18,7 @@ class CategoryControllerWeb extends Controller
         $validator = Validator::make($request->all(), [
             'name' => ['required', Rule::unique('categories')->where('status', 'Active')],
             'image' => ['required', Rule::imageFile()],
-            'restaurant_ids' => 'required'
+            // 'restaurant_ids' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -30,14 +30,14 @@ class CategoryControllerWeb extends Controller
                 ], 302);
             } else {
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/category/' . $_FILES['image']['name'])) {
-                    foreach($request->restaurant_ids as $restaurant_id){
+                    // foreach($request->restaurant_ids as $restaurant_id){
                         $category = new Categories();
                         $category->name = $request->name;
-                        $category->restaurant_id = $restaurant_id;
+                        // $category->restaurant_id = $restaurant_id;
                         $category->image = $_FILES['image']['name'];
                         $category->status = "Active";
                         $result = $category->save();
-                    }
+                    // }
                     
                     if ($result) {
                         return response()->json([
@@ -91,7 +91,7 @@ class CategoryControllerWeb extends Controller
     }
     public function categories($id = null)
     {
-            $categories = Categories::with('restaurant')->where('status', 'Active')->get();
+            $categories = Categories::where('status', 'Active')->get();
             return view('admin.categories',compact('categories'));
     }
     public function edit_category(Request $request, $id)
@@ -101,12 +101,12 @@ class CategoryControllerWeb extends Controller
                 $validator = Validator::make($request->all(), [
                     'name' => ['required'],
                     'image' => ['required', Rule::imageFile()],
-                    'restaurant_id' => 'required'
+                    // 'restaurant_id' => 'required'
                 ]);
             } else {
                 $validator = Validator::make($request->all(), [
                     'name' => ['required'],
-                    'restaurant_id' => 'required'
+                    // 'restaurant_id' => 'required'
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
@@ -128,7 +128,7 @@ class CategoryControllerWeb extends Controller
                     if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/category/' . $_FILES['image']['name'])) {
                         $category = Categories::where('id', $id)->update([
                             'name' => $request->name,
-                            'restaurant_id' => $request->restaurant_id,
+                            // 'restaurant_id' => $request->restaurant_id,
                             'image' => $_FILES['image']['name']
                         ]);
                         if ($category) {
@@ -148,7 +148,7 @@ class CategoryControllerWeb extends Controller
                 } else {
                     $category = Categories::where('id', $id)->update([
                         'name' => $request->name,
-                        'restaurant_id' => $request->restaurant_id
+                        // 'restaurant_id' => $request->restaurant_id
                     ]);
                     if ($category) {
                         return response()->json([
@@ -169,16 +169,16 @@ class CategoryControllerWeb extends Controller
     }
 
     public function category_create_view(){
-        $restaurants = Restaurants::where('status','Active')->get();
-        return view('admin.category-create',compact('restaurants'));
+        // $restaurants = Restaurants::where('status','Active')->get();
+        return view('admin.category-create');
     }
 
     public function edit_category_view($id){
         $category = Categories::where('id',$id);
         if($category->count() > 0){
             $category = $category->first();
-            $restaurants = Restaurants::where('status','Active')->get();
-            return view('admin.category-edit',compact('restaurants','category'));
+            // $restaurants = Restaurants::where('status','Active')->get();
+            return view('admin.category-edit',compact('category'));
         }
         else
         {

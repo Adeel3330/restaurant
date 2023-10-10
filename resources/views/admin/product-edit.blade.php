@@ -38,35 +38,21 @@
                             </div>
                             <div class="row mt-10">
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Restaurants</label>
-                                        <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
-                                            @forelse ($restaurants as $restaurant)
-                                            <option value="{{ $restaurant->id }}" {{ $product->restaurant_id == $restaurant->id ? "selected":"" }}>{{ $restaurant->name }}</option>
-                                            @empty
-                                            <option value="">No Restaurant found</option>
-                                            @endforelse
 
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Price</label>
                                         <input type="number" name="price" required class="form-control" value="{{ $product->price }}" placeholder="Enter product description">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Description</label>
                                         <textarea name="description" required cols="80" rows="4" class="form-control" placeholder="Enter product description">{{ $product->description }}</textarea>
                                     </div>
                                 </div>
-
                             </div>
+                            
 
                             <div class="seprator-block"></div>
                             <h6 class="txt-dark capitalize-font"><i class="icon-picture mr-10"></i>upload image</h6>
