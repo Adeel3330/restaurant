@@ -162,7 +162,7 @@ class BannerControllerWeb extends Controller
 
     public function banner_create_view(){
         $categories = Categories::where('status','Active')->get();
-        return view('admin.banner-create',compact('restaurants', 'categories'));
+        return view('admin.banner-create',compact('categories'));
     }
 
     public function banner_edit($id)
