@@ -17,19 +17,7 @@
                             <div class="row">
                                 <input type="hidden" id="benner_id" value="{{ $banner->id }}">
                                 <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Restaurants</label>
-                                        <select name="restaurant_id" id="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
-                                            @forelse ($restaurants as $restaurant)
-                                            <option value="{{ $restaurant->id }}" {{ $restaurant->id == $banner->restaurant_id ? "selected":""}}>{{ $restaurant->name }}</option>
-                                            @empty
-                                            <option value="">No Restaurant found</option>
-                                            @endforelse
-
-                                        </select>
-                                    </div>
-                                </div>
+                               
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Categories</label>
