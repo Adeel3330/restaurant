@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::table('categories', function (Blueprint $table) {
-            $table->bigInteger('restaurant_id')->unsigned()->change();
-            $table->foreign('restaurant_id')->references('id')->on('restaurants');
-        });
+        // Schema::table('categories', function (Blueprint $table) {
+        //     $table->bigInteger('restaurant_id')->unsigned()->change();
+        //     $table->foreign('restaurant_id')->references('id')->on('restaurants');
+        // });
     }
 
     /**
@@ -24,8 +24,8 @@ return new class extends Migration
     public function down(): void
     {
         //
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('restaurant_id');
-        });
+        // Schema::table('categories', function (Blueprint $table) {
+        //     $table->dropColumn('restaurant_id');
+        // });
     }
 };

@@ -1,7 +1,11 @@
 @extends('admin.include.sidebar')
 
 @section('body')
-
+<style>
+    input[type=time]::-webkit-datetime-edit-ampm-field {
+  display: none;
+}
+</style>
 <div class="row mt-25">
     <div class="col-sm-12">
         <div class="panel panel-default card-view">
@@ -18,13 +22,22 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Week Name</label>
-                                        <input class="form-control" name="name" required type="text" placeholder="Enter Week name">
+                                        <select name="name" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" required>
+                                            {{-- <option value="">No Restaurant found</option> --}}
+                                            <option value="Monday">Monday</option>
+                                            <option value="Tuesday">Tuesday</option>
+                                            <option value="Wednesday">Wednesday</option>
+                                            <option value="Thursday">Thursday</option>
+                                            <option value="Friday">Friday</option>
+                                            <option value="Saturday">Saturday</option>
+                                            <option value="Sunday">Sunday</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Opening Time</label>
-                                        <input type="time" class="form-control" name="opening_time" required>
+                                        <input type="text" class="form-control flatpickr" name="opening_time" id="opening_time" max="12:00" step="3600" required>
                                     </div>
                                 </div>
                                 <!--/span-->
@@ -33,20 +46,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Closing Time</label>
-                                        <input type="time" class="form-control" name="closing_time" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label mb-10">Restaurants</label>
-                                        <select name="restaurant_id" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline">
-                                            @forelse ($restaurants as $restaurant)
-                                            <option value="{{ $restaurant->id }}">{{ $restaurant->name }}</option>
-                                            @empty
-                                            <option value="">No Restaurant found</option>
-                                            @endforelse
-
-                                        </select>
+                                        <input type="time" class="form-control flatpickr" name="closing_time" id="closing_time" step="60" required>
                                     </div>
                                 </div>
                             </div>
@@ -113,6 +113,8 @@
             }
         });
     });
+
+   
 </script>
 
 

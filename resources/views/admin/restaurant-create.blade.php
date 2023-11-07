@@ -62,7 +62,7 @@
                                         <label class="control-label mb-10">Weeks Timings</label>
                                         <select name="week_ids[]" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" multiple>
                                             @forelse ($weeks as $week)
-                                            <option value="{{ $week->id }}">{{ $week->name }}</option>
+                                            <option value="{{ $week->id }}">{{ $week->name .' |  ('. $week->opening_time .' - '. $week->closing_time .' )'  }}</option>
                                             @empty
                                             <option value="">No week found</option>
                                             @endforelse

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('flavour_products', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('restaurants_timings', function (Blueprint $table) {
+            //
+            $table->dropConstrainedForeignId('restaurant_id');
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('flavour_products');
+        Schema::table('restaurants_timings', function (Blueprint $table) {
+            //
+        });
     }
 };

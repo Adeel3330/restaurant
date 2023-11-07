@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::table(
-            'products',
-            function (Blueprint $table) {
-                $table->dropConstrainedForeignId('restaurant_id');
-            }
-        );
-        Schema::table(
-            'categories',
-            function (Blueprint $table) {
-                $table->dropConstrainedForeignId('restaurant_id');
-            }
-        );
+        // Schema::table(
+        //     'products',
+        //     function (Blueprint $table) {
+        //         $table->dropConstrainedForeignId('restaurant_id');
+        //     }
+        // );
+        // Schema::table(
+        //     'categories',
+        //     function (Blueprint $table) {
+        //         $table->dropConstrainedForeignId('restaurant_id');
+        //     }
+        // );
     }
 
     /**

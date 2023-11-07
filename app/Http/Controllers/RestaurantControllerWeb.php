@@ -19,11 +19,10 @@ class RestaurantControllerWeb extends Controller
     public function restaurant_create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => ['required', Rule::unique('restaurants')],
+            'name' => ['required'],
             'image' => ['required', Rule::imageFile()],
             'longitude' => 'required',
             'latitude' => 'required',
-            'address' => 'required',
             'phone_no' => 'required',
             'week_ids' => 'required',
         ]);
@@ -42,7 +41,7 @@ class RestaurantControllerWeb extends Controller
                     $category->image = $_FILES['image']['name'];
                     $category->longitude = $request->longitude;
                     $category->latitude = $request->latitude;
-                    $category->address = $request->address;
+                    // $category->address = $request->address;
                     $category->phone_no = $request->phone_no;
                     $category->status = "Active";
                     if ($category->save()) {
@@ -136,11 +135,7 @@ class RestaurantControllerWeb extends Controller
                 ]);
             }
             //  dd(Categories::where('status', 'Active')->where('id', '!=', $id)->count());  
-            if (Restaurants::where('status', 'Active')->where('id', '!=', $id)->where('name', 'LIKE', $request->name)->count() > 0) {
-                return response()->json([
-                    "message" => "The name has already been taken"
-                ], 302);
-            }
+            
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 302);
             } else {

@@ -24,7 +24,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <!-- bootstrap-select CSS -->
     <link href="{{ url('/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
-
+`<link href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/flatpickr.css" rel="stylesheet">
 </head>
 
 <body>
@@ -306,6 +306,8 @@
 
         <!-- Bootstrap Select JavaScript -->
         <script src="{{ url('/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/flatpickr.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>
 
         <script>
             var SweetAlert = function() {};
@@ -443,6 +445,13 @@
             }
 
             // };
+
+            $( '.flatpickr' ).flatpickr({
+                    enableTime: true,
+                        noCalendar: true,
+                        time_24hr: true,
+                        minuteIncrement: 30
+            });
         </script>
 
         @yield('scripts')

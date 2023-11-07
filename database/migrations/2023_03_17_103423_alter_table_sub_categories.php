@@ -16,10 +16,10 @@ return new class extends Migration
         //     $table->bigInteger('restaurant_id')->unsigned()->change();
         //     $table->foreign('restaurant_id')->references('id')->on('restaurants');
         // });
-        Schema::table('products', function (Blueprint $table) {
-            $table->bigInteger('restaurant_id')->unsigned()->change();
-            $table->foreign('restaurant_id')->references('id')->on('restaurants');
-        });
+        // Schema::table('products', function (Blueprint $table) {
+        //     $table->bigInteger('restaurant_id')->unsigned()->change();
+        //     $table->foreign('restaurant_id')->references('id')->on('restaurants');
+        // });
     }
 
     /**
