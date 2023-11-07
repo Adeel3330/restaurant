@@ -36,7 +36,8 @@ class RestaurantTimingController extends Controller
 
     public function week_day_create(Request $req){
         $validator = Validator::make($req->all(), [
-            'name' => ['required',Rule::unique('restaurants_timings')],
+            'name.*' => ['required'],
+            'name' => ['required'],
             'opening_time' => 'required',
             'closing_time' => 'required',
         ]);
@@ -49,10 +50,13 @@ class RestaurantTimingController extends Controller
                 'message'=>'Week name already exists'
             ],302);
         }
-        $restaurant  = new RestaurantsTimings();
-        $restaurant->name = $req->name;
+        foreach($req->name as $name){
+            $restaurant  = new RestaurantsTimings();
+        $restaurant->name = $name;
         $restaurant->opening_time = $req->opening_time;
         $restaurant->closing_time = $req->closing_time;
+        }
+        
         if($restaurant->save()){
             return response()->json([
                 'message'=>'Weeks Created successfully'

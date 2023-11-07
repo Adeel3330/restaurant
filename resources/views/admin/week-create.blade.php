@@ -22,7 +22,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Week Name</label>
-                                        <select name="name" class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" required>
+                                        <select name="name[]" multiple class="form-control selectpicker btn-outline-none" data-style="btn-default btn-outline" required>
                                             {{-- <option value="">No Restaurant found</option> --}}
                                             <option value="Monday">Monday</option>
                                             <option value="Tuesday">Tuesday</option>
