@@ -46,7 +46,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label mb-10">Closing Time</label>
-                                        <input type="time" class="form-control flatpickr" name="closing_time" id="closing_time" step="60" required>
+                                        <input type="text" class="form-control flatpickr" name="closing_time" id="closing_time" step="60" required>
                                     </div>
                                 </div>
                             </div>

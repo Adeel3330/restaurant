@@ -15,16 +15,20 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <!-- Data table CSS -->
-    <link href="{{ url('/vendors/bower_components/datatables/media/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ url('/vendors/bower_components/datatables/media/css/jquery.dataTables.min.css') }}" rel="stylesheet"
+        type="text/css" />
 
     <!-- Custom CSS -->
     <link href="{{ url('/dist/css/style.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ url('/dist/css/glyphicons.less') }}" rel="stylesheet" type="text/css">
     <link href="{{ url('/vendors/bower_components/sweetalert/dist/sweetalert.css') }}">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <!-- bootstrap-select CSS -->
-    <link href="{{ url('/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css" />
-`<link href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/flatpickr.css" rel="stylesheet">
+    <link href="{{ url('/vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css') }}"
+        rel="stylesheet" type="text/css" />
+    `
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/flatpickr.css" rel="stylesheet">
 </head>
 
 <body>
@@ -37,15 +41,23 @@
 
         <!-- Top Menu Items -->
         <nav class="navbar navbar-inverse navbar-fixed-top">
-            <a id="toggle_nav_btn" class="toggle-left-nav-btn inline-block mr-20 pull-left" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
-            <a href="/admin/home"><img class="brand-img pull-left" src="{{ url('/dist/img/logo.png') }}" alt="brand" /></a>
+            <a id="toggle_nav_btn" class="toggle-left-nav-btn inline-block mr-20 pull-left"
+                href="javascript:void(0);"><i class="fa fa-bars"></i></a>
+            <a href="/admin/home"><img class="brand-img pull-left" src="{{ url('/dist/img/logo.png') }}"
+                    alt="brand" /></a>
             <ul class="nav navbar-right top-nav pull-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle pr-0" data-toggle="dropdown"><img src="{{ url('dist/img/user1.png') }}" alt="user_auth" class="user-auth-img img-circle" /><span class="user-online-status"></span></a>
+                    <a href="#" class="dropdown-toggle pr-0" data-toggle="dropdown"><img
+                            src="{{ url('dist/img/user1.png') }}" alt="user_auth"
+                            class="user-auth-img img-circle" /><span class="user-online-status"></span></a>
                     <ul class="dropdown-menu user-auth-dropdown" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                         <li>
-                            <a href="/admin/logout"><svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="right-to-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="initial-icon svg-inline--fa fa-right-to-bracket fa-xl">
-                                    <path fill="currentColor" d="M192 365.8L302 256 192 146.2l0 53.8c0 13.3-10.7 24-24 24L48 224l0 64 120 0c13.3 0 24 10.7 24 24l0 53.8zM352 256c0 11.5-4.6 22.5-12.7 30.6L223.2 402.4c-8.7 8.7-20.5 13.6-32.8 13.6c-25.6 0-46.4-20.8-46.4-46.4l0-33.6-96 0c-26.5 0-48-21.5-48-48l0-64c0-26.5 21.5-48 48-48l96 0 0-33.6c0-25.6 20.8-46.4 46.4-46.4c12.3 0 24.1 4.9 32.8 13.6L339.3 225.4c8.1 8.1 12.7 19.1 12.7 30.6zm-8 176l80 0c22.1 0 40-17.9 40-40l0-272c0-22.1-17.9-40-40-40l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l80 0c48.6 0 88 39.4 88 88l0 272c0 48.6-39.4 88-88 88l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z" class=""></path>
+                            <a href="/admin/logout"><svg aria-hidden="true" focusable="false" data-prefix="far"
+                                    data-icon="right-to-bracket" role="img" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512" class="initial-icon svg-inline--fa fa-right-to-bracket fa-xl">
+                                    <path fill="currentColor"
+                                        d="M192 365.8L302 256 192 146.2l0 53.8c0 13.3-10.7 24-24 24L48 224l0 64 120 0c13.3 0 24 10.7 24 24l0 53.8zM352 256c0 11.5-4.6 22.5-12.7 30.6L223.2 402.4c-8.7 8.7-20.5 13.6-32.8 13.6c-25.6 0-46.4-20.8-46.4-46.4l0-33.6-96 0c-26.5 0-48-21.5-48-48l0-64c0-26.5 21.5-48 48-48l96 0 0-33.6c0-25.6 20.8-46.4 46.4-46.4c12.3 0 24.1 4.9 32.8 13.6L339.3 225.4c8.1 8.1 12.7 19.1 12.7 30.6zm-8 176l80 0c22.1 0 40-17.9 40-40l0-272c0-22.1-17.9-40-40-40l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l80 0c48.6 0 88 39.4 88 88l0 272c0 48.6-39.4 88-88 88l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"
+                                        class=""></path>
                                 </svg> Log Out</a>
                         </li>
                     </ul>
@@ -56,9 +68,12 @@
                     <div class="form-group mb-0">
                         <div class="input-search">
                             <div class="input-group">
-                                <input type="text" id="overlay_search" name="overlay-search" class="form-control pl-30" placeholder="Search">
+                                <input type="text" id="overlay_search" name="overlay-search"
+                                    class="form-control pl-30" placeholder="Search">
                                 <span class="input-group-addon pr-30">
-                                    <a href="javascript:void(0)" class="close-input-overlay" data-target="#site_navbar_search" data-toggle="collapse" aria-label="Close" aria-expanded="true"><i class="fa fa-times"></i></a>
+                                    <a href="javascript:void(0)" class="close-input-overlay"
+                                        data-target="#site_navbar_search" data-toggle="collapse" aria-label="Close"
+                                        aria-expanded="true"><i class="fa fa-times"></i></a>
                                 </span>
                             </div>
                         </div>
@@ -72,10 +87,13 @@
         <div class="fixed-sidebar-left">
             <ul class="nav navbar-nav side-nav nicescroll-bar">
                 <li>
-                    <a href="/admin/home"><i class="fa fa-dashboard mr-10"></i>Dashboard <span class="pull-right"></span></a>
+                    <a href="/admin/home"><i class="fa fa-dashboard mr-10"></i>Dashboard <span
+                            class="pull-right"></span></a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#rest_dr"><i class="icon-basket-loaded mr-10"></i>Restaurants<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#rest_dr"><i
+                            class="icon-basket-loaded mr-10"></i>Restaurants<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="rest_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/restaurants">Restaurants</a>
@@ -86,7 +104,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#banner_dr"><i class="icon-briefcase mr-10"></i>Banners<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#banner_dr"><i
+                            class="icon-briefcase mr-10"></i>Banners<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="banner_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/banners">Banners</a>
@@ -97,7 +117,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#cate_dr"><i class="ti-layout-grid2 mr-10"></i>Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#cate_dr"><i
+                            class="ti-layout-grid2 mr-10"></i>Categories<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="cate_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/categories">Categories</a>
@@ -108,7 +130,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addon_cate_dr"><i class="ti-layout-grid2 mr-10"></i>Addon Categories<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addon_cate_dr"><i
+                            class="ti-layout-grid2 mr-10"></i>Addon Categories<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="addon_cate_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/addon-categories">Addon Categories</a>
@@ -141,7 +165,9 @@
                     </ul>
                 </li> -->
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#products_dr"><i class="fa fa-product-hunt mr-10"></i>Products<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#products_dr"><i
+                            class="fa fa-product-hunt mr-10"></i>Products<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="products_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/products">Products</a>
@@ -152,7 +178,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addons_dr"><i class="fa fa-plus mr-10"></i>Addons<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#addons_dr"><i
+                            class="fa fa-plus mr-10"></i>Addons<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="addons_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/addons">Addons</a>
@@ -163,16 +191,21 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="/admin/carts"><i class="icon-basket-loaded mr-10"></i>Carts <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
+                    <a href="/admin/carts"><i class="icon-basket-loaded mr-10"></i>Carts <span
+                            class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>
-                    <a href="/admin/delivery_fees"><i class="fa fa-dollar mr-10"></i>Delivery Fee <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
+                    <a href="/admin/delivery_fees"><i class="fa fa-dollar mr-10"></i>Delivery Fee <span
+                            class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>
-                    <a href="/admin/orders"><i class="fa fa-first-order mr-10"></i>Orders <span class="pull-right"><span class="label label-info mr-10"></span></span></a>
+                    <a href="/admin/orders"><i class="fa fa-first-order mr-10"></i>Orders <span
+                            class="pull-right"><span class="label label-info mr-10"></span></span></a>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#admin_dr"><i class="fa fa-users mr-10"></i>Admins<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#admin_dr"><i
+                            class="fa fa-users mr-10"></i>Admins<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="admin_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/admins">Admin</a>
@@ -183,7 +216,9 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#driver_dr"><i class="fa fa-users mr-10"></i>Drivers<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#driver_dr"><i
+                            class="fa fa-users mr-10"></i>Drivers<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="driver_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/drivers">Drivers</a>
@@ -194,7 +229,9 @@
                     </ul>
                 </li>
                 <li style="margin-bottom: 3rem;">
-                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#owner_dr"><i class="fa fa-users mr-10"></i>Restaurant<span class="pull-right"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#owner_dr"><i
+                            class="fa fa-users mr-10"></i>Restaurant<span class="pull-right"><i
+                                class="fa fa-fw fa-angle-down"></i></span></a>
                     <ul id="owner_dr" class="collapse collapse-level-1">
                         <li>
                             <a href="/admin/owners">Restaurant</a>
@@ -446,11 +483,21 @@
 
             // };
 
-            $( '.flatpickr' ).flatpickr({
-                    enableTime: true,
-                        noCalendar: true,
-                        time_24hr: true,
-                        minuteIncrement: 30
+            $('.flatpickr').flatpickr({
+                enableTime: true,
+                noCalendar: true,
+                time_24hr: true,
+                minuteIncrement: 30,
+                timeFormat: "H:i",
+                locale: {
+                    firstDayOfWeek: 1, // Start week on Monday
+                    weekdays: {
+                        shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                        longhand: [
+                            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+                        ]
+                    },
+                },
             });
         </script>
 
