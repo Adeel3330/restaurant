@@ -45,12 +45,13 @@ class RestaurantTimingController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 302);
         }
-        if(RestaurantsTimings::where('name','LIKE','%'.$req->name.'%')->count() > 0){
-            return response()->json([
-                'message'=>'Week name already exists'
-            ],302);
-        }
+        
         foreach($req->name as $name){
+            if(RestaurantsTimings::where('name','LIKE','%'.$name.'%')->count() > 0){
+                return response()->json([
+                    'message'=>'Week name already exists'
+                ],302);
+            }
             $restaurant  = new RestaurantsTimings();
         $restaurant->name = $name;
         $restaurant->opening_time = $req->opening_time;
