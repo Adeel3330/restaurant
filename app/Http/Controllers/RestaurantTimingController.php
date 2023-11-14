@@ -56,9 +56,10 @@ class RestaurantTimingController extends Controller
         $restaurant->name = $name;
         $restaurant->opening_time = $req->opening_time;
         $restaurant->closing_time = $req->closing_time;
+       $res =  $restaurant->save();
         }
         
-        if($restaurant->save()){
+        if($res){
             return response()->json([
                 'message'=>'Weeks Created successfully'
             ],200);
