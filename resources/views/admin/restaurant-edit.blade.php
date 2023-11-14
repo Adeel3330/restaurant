@@ -66,7 +66,7 @@
                                             @forelse ($weeks as $week)
                                             <option value="{{ $week->id }}" @foreach($restaurant->week_ids as $week_id)
                                                 {{$week_id->restaurant_timings_id == $week->id ? "selected":"" }}
-                                                @endforeach >{{ $week->name }}
+                                                @endforeach >{{ $week->name .' |  ('. $week->opening_time .' - '. $week->closing_time .' )'  }}
                                             </option>
                                             @empty
                                             <option value="">No week found</option>
