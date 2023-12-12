@@ -24,6 +24,7 @@ class RestaurantControllerWeb extends Controller
             'longitude' => 'required',
             'latitude' => 'required',
             'phone_no' => 'required',
+            'address' => 'required',
             'week_ids' => 'required',
         ]);
 
@@ -41,7 +42,7 @@ class RestaurantControllerWeb extends Controller
                     $category->image = $_FILES['image']['name'];
                     $category->longitude = $request->longitude;
                     $category->latitude = $request->latitude;
-                    // $category->address = $request->address;
+                    $category->address = $request->address;
                     $category->phone_no = $request->phone_no;
                     $category->status = "Active";
                     if ($category->save()) {

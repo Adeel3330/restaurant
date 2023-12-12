@@ -29,6 +29,11 @@
         rel="stylesheet" type="text/css" />
     `
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/flatpickr.css" rel="stylesheet">
+
+    <!-- Bootstrap stylesheet -->
+{{-- <link rel="stylesheet" type="text/css" href="{{ url('/clock/assets/css/bootstrap.min.css') }}"> --}}
+<link rel="stylesheet" type="text/css" href="{{ url('/clock/dist/bootstrap-clockpicker.min.css') }}">
+
 </head>
 
 <body>
@@ -343,8 +348,10 @@
 
         <!-- Bootstrap Select JavaScript -->
         <script src="{{ url('/vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.0/flatpickr.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>
+        {{-- <script src="{{ url('/clock/assets/js/jquery.min.js') }}"></script> --}}
+        {{-- <script src="{{ url('/clock/assets/js/bootstrap.min.js') }}"></script> --}}
+        <script src="{{ url('/clock/dist/bootstrap-clockpicker.min.js') }}"></script>
+
 
         <script>
             var SweetAlert = function() {};
@@ -483,22 +490,24 @@
 
             // };
 
-            $('.flatpickr').flatpickr({
-                enableTime: true,
-                noCalendar: true,
-                time_24hr: true,
-                minuteIncrement: 30,
-                timeFormat: "H:i",
-                locale: {
-                    firstDayOfWeek: 1, // Start week on Monday
-                    weekdays: {
-                        shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                        longhand: [
-                            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-                        ]
-                    },
-                },
-            });
+            // $('.flatpickr').flatpickr({
+            //     enableTime: true,
+            //     noCalendar: true,
+            //     time_24hr: true,
+            //     minuteIncrement: 30,
+            //     timeFormat: "H:i",
+            //     locale: {
+            //         firstDayOfWeek: 1, // Start week on Monday
+            //         weekdays: {
+            //             shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            //             longhand: [
+            //                 "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+            //             ]
+            //         },
+            //     },
+            // });
+
+    $('.flatpickr').clockpicker()
         </script>
 
         @yield('scripts')

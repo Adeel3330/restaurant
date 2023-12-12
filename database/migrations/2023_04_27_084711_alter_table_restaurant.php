@@ -19,12 +19,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Schema::table('restaurants', function (Blueprint $table) {
-        //     $table->string('address');
-        //     $table->unsignedBigInteger('week_id')->nullable();
-        //     $table->foreign('week_id')->references('id')->on('restaurants_timings')->change();
-        //     $table->string('phone_no');
-        // });
+        Schema::table('restaurants', function (Blueprint $table) {
+            $table->string('address');
+            $table->unsignedBigInteger('week_id')->nullable();
+            $table->foreign('week_id')->references('id')->on('restaurants_timings')->change();
+            $table->string('phone_no');
+        });
     }
 
     /**
