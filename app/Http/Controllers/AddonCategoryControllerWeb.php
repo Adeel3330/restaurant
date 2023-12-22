@@ -65,17 +65,17 @@ class AddonCategoryControllerWeb extends Controller
                 "message" => "Please enter the id of products for deleting"
             ], 302);
         }
-        if (AddonCategory::with('sub_addon_category', 'product')->where('id', $id)->where('status', 'Active')->count() > 0) {
+        if (AddonCategory::where('id', $id)->where('status', 'Active')->count() > 0) {
             $addon_category = AddonCategory::where('id', $id)->update([
                 'status' => 'delete',
             ]);
             if ($addon_category) {
-                $subaddon_category = AddonSubCategory::where('addon_category_id', $id)->update([
-                    'status' => 'delete'
-                ]);
-                $products = Products::where('addon_category_id', $id)->update([
-                    'status' => 'delete'
-                ]);
+                // $subaddon_category = AddonSubCategory::where('addon_category_id', $id)->update([
+                //     'status' => 'delete'
+                // ]);
+                // $products = Products::where('addon_category_id', $id)->update([
+                //     'status' => 'delete'
+                // ]);
                 return response()->json([
                     "message" => "Addon category deleted successfully"
                 ], 200);

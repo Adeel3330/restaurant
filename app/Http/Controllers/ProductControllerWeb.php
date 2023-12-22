@@ -150,7 +150,7 @@ class ProductControllerWeb extends Controller
                             "message" => "Max file size is 2mb"
                         ], 302);
                     }
-                    unlink($_SERVER['DOCUMENT_ROOT'] . '/image/product/' .  Products::where('id', $id)->first()->image);
+                    // unlink($_SERVER['DOCUMENT_ROOT'] . '/image/product/' .  Products::where('id', $id)->first()->image);
                     if (move_uploaded_file($_FILES['image']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/image/product/' . $_FILES['image']['name'])) {
                         $category = Products::where('id', $id)->update([
                             'name' => $request->name,
