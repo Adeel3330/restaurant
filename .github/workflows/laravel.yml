@@ -43,3 +43,10 @@ jobs:
         DB_CONNECTION: mysql
         DB_DATABASE: database/database.mysql
       run: vendor/bin/phpunit
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ftp.ancerl.co.za
+        username: adeelftp@ancerl.co.za
+        password: Adeel@ftp1234
+        server-dir: '/public_html/restaurant/'
