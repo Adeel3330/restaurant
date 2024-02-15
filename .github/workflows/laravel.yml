@@ -22,7 +22,7 @@ jobs:
       with:
         server: ftp.ancerl.co.za
         username: adeelftp@ancerl.co.za
-        password: ${{ Adeel@ftp1234 }}
+        password: Adeel@ftp1234
         server-dir: '/restaurant'
 
 
