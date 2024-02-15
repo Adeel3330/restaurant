@@ -23,7 +23,7 @@ jobs:
         server: ftp.ancerl.co.za
         username: adeelftp@ancerl.co.za
         password: Adeel@ftp1234
-        server-dir: '/restaurant'
+        server-dir: '/restaurant/'
 
 
     - name: Copy .env
