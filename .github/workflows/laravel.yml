@@ -7,26 +7,16 @@ on:
     branches: [ "staging" ]
 
 jobs:
-  laravel-tests:
-
-    runs-on: ubuntu-latest
-
+  build:
+    runs-on: self-hosted
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Enviroment
+      uses: shivammathur/setup-php@v2
       with:
         php-version: '8.1'
-    - uses: actions/checkout@v3
-
-    - name: 📂 Sync files
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
-      with:
-        server: ftp.ancerl.co.za
-        username: adeelftp@ancerl.co.za
-        password: Adeel@ftp1234
-        server-dir: '/restaurant/'
-
-
-    - name: Copy .env
+     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     - name: Install Dependencies
       run: composer install
@@ -42,4 +32,20 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: vendor/bin/phpunit
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch
+        uses: actions/checkout@v2
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+              username: ${{ secrets.FTP_USERNAME}}
+              host: ${{ secrets.FTP_SERVER }}
+              key: ${{secrets.FTP_PASSWORD}}
+              script: |
+                      cd /var/www/html/restaurant
+                      git checkout -f
+                      git pull
+                      php artisan migrate 
